@@ -1,0 +1,3436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE HARD DRIVE V5 — Weapon Lab ULTIMATE</title>
+  <style>
+    :root {
+      --bg-dark: #050816;
+      --bg-mid: #0f172a;
+      --card-bg: rgba(15, 23, 42, 0.95);
+      --card-border: rgba(251, 146, 60, 0.5);
+      --accent: #f97316;
+      --accent-soft: #fb923c;
+      --purple: #a855f7;
+      --good: #4ade80;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow-x: hidden; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--bg-dark), var(--bg-mid), #1e1b4b);
+      color: var(--text);
+      padding: 20px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(168, 85, 247, 0.1));
+      border-radius: 20px;
+      border: 2px solid var(--card-border);
+    }
+    h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #fff, var(--accent-soft), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .subtitle { color: var(--text-muted); margin-top: 8px; }
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    /* INFO BUTTON - AT TOP */
+    .info-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: rgba(168, 85, 247, 0.2);
+      border: 2px solid var(--purple);
+      color: var(--purple);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: all 0.2s;
+    }
+    .info-btn:hover { background: rgba(168, 85, 247, 0.3); transform: translateY(-2px); }
+    .info-btn-text { margin-left: 6px; }
+
+    /* MODE TOGGLE */
+    .mode-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .mode-btn {
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+    }
+    .mode-btn:hover { border-color: var(--accent); }
+    .mode-btn.active {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(168, 85, 247, 0.1));
+      color: var(--text);
+    }
+    .mode-btn .mode-title { font-weight: 700; margin-bottom: 4px; }
+    .mode-btn .mode-desc { font-size: 0.75rem; opacity: 0.8; }
+
+    /* FORMS */
+    .form-group { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    select, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    textarea { min-height: 80px; font-family: monospace; resize: vertical; }
+    select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+
+    /* COLLAPSIBLE SECTIONS */
+    .collapsible-section {
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .collapsible-section.collapsed {
+      max-height: 0;
+      margin: 0;
+      padding: 0;
+    }
+    .collapsible-section.expanded {
+      max-height: 500px;
+    }
+    .section-toggle {
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: block;
+      text-align: center;
+    }
+    .section-toggle:hover {
+      color: var(--accent-soft);
+    }
+
+    /* BUILDER INFO MODAL */
+    .label-with-tooltip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .tooltip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid var(--purple);
+      color: var(--purple);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tooltip-icon:hover {
+      background: rgba(168, 85, 247, 0.4);
+      transform: scale(1.1);
+    }
+    
+    /* CENTERED POPUP MODAL */
+    .info-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .info-modal.show {
+      display: flex;
+    }
+    .info-modal-content {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.95), rgba(168, 85, 247, 0.9));
+      border: 2px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 400px;
+      color: #fff;
+      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    .info-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .info-modal-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    /* BUTTONS ALIGNED */
+    .btn-row { 
+      display: flex; 
+      gap: 8px; 
+      margin: 20px 0; 
+      flex-wrap: wrap;
+    }
+    .btn {
+      flex: 1 1 32%;
+      padding: 14px 10px;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: #fff;
+      min-width: 120px;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), #ea580c); }
+    .btn-secondary { background: rgba(148, 163, 184, 0.2); border: 1px solid rgba(148, 163, 184, 0.3); color: var(--text); }
+    .btn:hover { transform: translateY(-2px); transition: transform 0.2s; }
+
+    /* ELEMENTS GRID */
+    .element-grid { 
+      display: flex; 
+      gap: 8px; 
+      margin-bottom: 16px; 
+      flex-wrap: wrap;
+    }
+    .element-btn {
+      flex: 1 1 32%;
+      padding: 10px 4px;
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      border-radius: 10px;
+      background: transparent;
+      cursor: pointer;
+      text-align: center;
+      color: var(--text);
+      transition: all 0.2s ease;
+      min-width: 120px;
+    }
+    .element-btn:hover { border-color: var(--accent); }
+    .element-btn.active { background: rgba(249, 115, 22, 0.2); border-color: var(--accent); }
+    .el-icon { font-size: 1.2rem; }
+    .el-name { font-size: 0.65rem; margin-top: 2px; }
+
+    /* LICENSED PARTS */
+    .licensed-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 16px; }
+    .licensed-item {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 14px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: rgba(15, 23, 42, 0.5);
+      cursor: pointer;
+    }
+    .licensed-item:hover { border-color: var(--accent); }
+    .licensed-item input { accent-color: var(--accent); width: 16px; height: 16px; }
+    .licensed-item > div { flex: 1; }
+    .part-name { font-weight: 600; font-size: 0.85rem; text-align: center; }
+    .part-effect { font-size: 0.7rem; color: var(--text-muted); text-align: center; }
+
+    /* SCROLLABLE GRIDS FOR PERKS/PRISMS */
+    .scrollable-grid-container {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 10px;
+      padding: 8px;
+      background: rgba(15, 23, 42, 0.3);
+    }
+    .scrollable-grid-container::-webkit-scrollbar { width: 8px; }
+    .scrollable-grid-container::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 10px; }
+    .scrollable-grid-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    /* OUTPUT & STATS */
+    .output-section { 
+      border-top: 2px solid rgba(251, 146, 60, 0.3);
+      padding-top: 24px; 
+      margin-top: 20px;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.05), rgba(168, 85, 247, 0.05));
+      border-radius: 16px;
+      padding: 24px;
+    }
+    
+    .serial-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 16px 12px 12px 12px;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(168, 85, 247, 0.1));
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+    .serial-label {
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+      font-weight: 700;
+    }
+    
+    .serial-tabs {
+      display: flex;
+      gap: 3px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 3px;
+      border-radius: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .serial-tab {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      min-width: 70px;
+    }
+    .serial-tab:hover {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text);
+    }
+    .serial-tab.active {
+      background: linear-gradient(135deg, var(--accent), #ea580c);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+    }
+    
+    /* GUIDE SECTION */
+    .guide-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .guide-tab {
+      padding: 8px 14px;
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.5);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .guide-tab:hover {
+      border-color: var(--accent);
+    }
+    .guide-tab.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .guide-content {
+      display: none;
+      max-height: 500px;
+      overflow-y: auto;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .guide-content.active {
+      display: block;
+    }
+    .guide-content::-webkit-scrollbar { width: 8px; }
+    .guide-content::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 10px; }
+    .guide-content::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+    .guide-content h3 {
+      color: var(--accent-soft);
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+    .guide-content h4 {
+      color: var(--purple);
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 0.65rem;
+      table-layout: fixed;
+    }
+    .guide-content th {
+      background: rgba(249, 115, 22, 0.2);
+      color: var(--accent-soft);
+      padding: 6px 4px;
+      text-align: left;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      font-size: 0.65rem;
+      word-wrap: break-word;
+    }
+    .guide-content td {
+      padding: 4px 3px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: var(--text);
+      font-size: 0.62rem;
+      line-height: 1.3;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .guide-content tr:hover {
+      background: rgba(249, 115, 22, 0.1);
+    }
+    .combo-card {
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 12px 0;
+    }
+    .combo-card h4 {
+      color: var(--purple);
+      margin: 0 0 8px 0;
+      font-size: 0.85rem;
+    }
+    .combo-card .combo-desc {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .combo-card .combo-parts {
+      font-size: 0.68rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .combo-card .combo-effect {
+      background: rgba(249, 115, 22, 0.15);
+      padding: 8px;
+      border-radius: 6px;
+      margin-top: 8px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent-soft);
+      line-height: 1.4;
+    }
+    
+    /* SYNERGY CARDS - Clickable in Builder Mode */
+    .synergy-card {
+      background: rgba(168, 85, 247, 0.1);
+      border: 2px solid rgba(168, 85, 247, 0.3);
+      border-radius: 10px;
+      padding: 14px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .synergy-card:hover {
+      background: rgba(168, 85, 247, 0.2);
+      border-color: var(--purple);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+    }
+    .synergy-card.active {
+      background: rgba(168, 85, 247, 0.25);
+      border-color: var(--purple);
+      border-width: 3px;
+    }
+    .synergy-card-title {
+      color: var(--purple);
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+    .synergy-card-parts {
+      font-size: 0.68rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .synergy-card-desc {
+      background: rgba(249, 115, 22, 0.15);
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      color: var(--accent-soft);
+      line-height: 1.4;
+    }
+    .synergy-section {
+      display: none;
+      margin-top: 16px;
+    }
+    .synergy-grid {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 8px;
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .synergy-grid::-webkit-scrollbar { width: 8px; }
+    .synergy-grid::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 10px; }
+    .synergy-grid::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 10px; }
+    
+    /* SAVED BUILDS SECTION */
+    .saved-builds-section {
+      margin-top: 16px;
+    }
+    .saved-builds-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .saved-builds-actions .btn {
+      flex: 1 1 auto;
+      min-width: 100px;
+      padding: 10px 12px;
+      font-size: 0.75rem;
+    }
+    .build-card {
+      background: rgba(74, 222, 128, 0.1);
+      border: 2px solid rgba(74, 222, 128, 0.3);
+      border-radius: 10px;
+      padding: 12px;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .build-card:hover {
+      background: rgba(74, 222, 128, 0.15);
+      border-color: var(--good);
+      transform: translateX(4px);
+    }
+    .build-card.selected {
+      border-color: var(--accent);
+      background: rgba(249, 115, 22, 0.15);
+    }
+    .build-card-checkbox {
+      accent-color: var(--good);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      margin-top: 2px;
+    }
+    .build-card-content {
+      flex: 1;
+    }
+    .build-card-name {
+      color: var(--good);
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+    .build-card-weapon {
+      color: var(--text);
+      font-size: 0.75rem;
+      margin-bottom: 4px;
+    }
+    .build-card-parts {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      line-height: 1.4;
+    }
+    .build-card-time {
+      color: var(--text-muted);
+      font-size: 0.65rem;
+      margin-top: 4px;
+      font-style: italic;
+    }
+    .builds-grid {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 8px;
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .builds-grid::-webkit-scrollbar { width: 8px; }
+    .builds-grid::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 10px; }
+    .builds-grid::-webkit-scrollbar-thumb { background: var(--good); border-radius: 10px; }
+    .builds-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    
+    .serial-output {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(15, 23, 42, 0.8));
+      border: 2px solid var(--good);
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #bbf7d0;
+      word-break: break-all;
+      min-height: 100px;
+      user-select: all;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.2), inset 0 0 20px rgba(74, 222, 128, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .serial-output::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--good), transparent);
+      animation: scanline 2s linear infinite;
+    }
+    @keyframes scanline {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .serial-output.empty {
+      color: var(--text-muted);
+      border-color: rgba(148, 163, 184, 0.3);
+      box-shadow: none;
+    }
+    .serial-output.empty::before {
+      display: none;
+    }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+    .stat-box { 
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.8)); 
+      padding: 14px; 
+      border-radius: 10px; 
+      border: 1px solid rgba(251, 146, 60, 0.3);
+      transition: all 0.2s;
+    }
+    .stat-box:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(251, 146, 60, 0.2);
+      transform: translateY(-2px);
+    }
+    .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-value { font-weight: 700; color: #fff; font-size: 1.1rem; margin-top: 4px; }
+
+    .message { 
+      margin-top: 16px; 
+      padding: 12px 16px; 
+      border-radius: 10px; 
+      display: none; 
+      text-align: center; 
+      font-size: 0.85rem;
+      font-weight: 600;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .message.show { display: block; }
+    .message.success { 
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(74, 222, 128, 0.15)); 
+      color: #bbf7d0; 
+      border: 1px solid #22c55e;
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+    }
+    .message.error { 
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(248, 113, 113, 0.15)); 
+      color: #fecaca; 
+      border: 1px solid #ef4444;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      padding: 16px 24px;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.95), rgba(234, 88, 12, 0.95));
+      border: 2px solid var(--accent-soft);
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 8px 32px rgba(249, 115, 22, 0.4);
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* BASE WEAPON TOAST - Floating over UI */
+    .base-weapon-toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50px);
+      padding: 12px 20px;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.95), rgba(139, 92, 246, 0.95));
+      border: 2px solid var(--purple);
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      box-shadow: 0 8px 32px rgba(168, 85, 247, 0.4);
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.4s ease;
+      pointer-events: none;
+      text-align: center;
+    }
+    .base-weapon-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* LEVEL SELECTOR */
+    .level-selector { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+    .level-btn {
+      flex: 1;
+      max-width: 120px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    .level-btn:hover { border-color: var(--accent); }
+    .level-btn.active {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(168, 85, 247, 0.1));
+      color: var(--text);
+    }
+
+    /* INFO MODAL */
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); overflow-y: auto; }
+    .modal.show { display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content {
+      background: linear-gradient(135deg, var(--card-bg), rgba(30, 41, 59, 0.95));
+      border: 2px solid var(--card-border);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 650px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(249, 115, 22, 0.3), 0 0 0 1px rgba(168, 85, 247, 0.2);
+      animation: modalSlideIn 0.3s ease;
+    }
+    @keyframes modalSlideIn {
+      from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-content::-webkit-scrollbar { width: 10px; }
+    .modal-content::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 10px; }
+    .modal-content::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+    .modal-header { 
+      font-size: 1.5rem; 
+      font-weight: 700; 
+      margin-bottom: 24px; 
+      background: linear-gradient(135deg, #fff, var(--accent-soft), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.2s;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.5);
+    }
+    .modal-close:hover { 
+      color: #fff; 
+      background: var(--accent);
+      transform: rotate(90deg);
+    }
+    .mode-info { 
+      margin-bottom: 20px; 
+      padding: 16px; 
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(168, 85, 247, 0.05)); 
+      border-left: 4px solid var(--accent); 
+      border-radius: 12px;
+      border: 1px solid rgba(251, 146, 60, 0.3);
+      transition: all 0.2s;
+    }
+    .mode-info:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.2);
+      transform: translateX(4px);
+    }
+    .mode-info-title { 
+      font-weight: 700; 
+      color: var(--accent-soft); 
+      margin-bottom: 10px; 
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+    }
+    .mode-info-desc { 
+      font-size: 0.85rem; 
+      color: var(--text); 
+      line-height: 1.6; 
+    }
+    .mode-info-desc strong {
+      color: var(--accent-soft);
+    }
+
+    /* DETAILED WEAPON STATS */
+    .weapon-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(168, 85, 247, 0.15));
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 2px solid var(--card-border);
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.15);
+    }
+    .weapon-type { font-size: 1.2rem; font-weight: 700; color: var(--accent-soft); text-shadow: 0 0 10px rgba(251, 146, 60, 0.3); }
+    .weapon-level { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; }
+    .weapon-rarity { 
+      font-size: 0.85rem; 
+      padding: 6px 14px; 
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(168, 85, 247, 0.2)); 
+      border-radius: 20px; 
+      color: #e9d5ff; 
+      font-weight: 700;
+      border: 1px solid var(--purple);
+      text-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
+    }
+
+    .mods-section { margin-top: 20px; }
+    .mods-title { 
+      font-size: 0.75rem; 
+      text-transform: uppercase; 
+      color: var(--purple); 
+      margin-bottom: 10px; 
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 8px 12px;
+      background: linear-gradient(90deg, rgba(168, 85, 247, 0.2), transparent);
+      border-left: 3px solid var(--purple);
+      border-radius: 4px;
+    }
+    .mod-list { 
+      background: rgba(15, 23, 42, 0.6); 
+      border-radius: 10px; 
+      padding: 14px; 
+      max-height: 200px; 
+      overflow-y: auto;
+      border: 1px solid rgba(168, 85, 247, 0.2);
+    }
+    .mod-list::-webkit-scrollbar { width: 8px; }
+    .mod-list::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 10px; }
+    .mod-list::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 10px; }
+    .mod-item { padding: 6px 0; font-size: 0.85rem; color: var(--text); line-height: 1.4; }
+    .mod-item::before { content: "▸ "; color: var(--accent); margin-right: 8px; font-weight: 700; }
+
+    /* RESPONSIVE RULES */
+    @media (max-width: 820px) {
+      .container { padding: 0 12px; }
+      h1 { font-size: 1.9rem; }
+      .btn { min-width: 110px; flex: 1 1 45%; }
+      .element-btn { min-width: 110px; flex: 1 1 45%; }
+    }
+
+    @media (max-width: 520px) {
+      .mode-toggle { grid-template-columns: 1fr; }
+      .element-btn { flex: 1 1 48%; min-width: 0; }
+      .licensed-grid { grid-template-columns: 1fr; }
+      .btn { flex: 1 1 48%; min-width: 0; }
+      .btn-row .btn:nth-child(3) { flex-basis: 100%; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      textarea { min-height: 100px; }
+      .mode-btn .mode-title { font-size: 0.95rem; }
+      .serial-tab { padding: 8px 16px; min-width: 80px; font-size: 0.75rem; }
+      .serial-tabs { gap: 3px; }
+    }
+
+    @media (max-width: 380px) {
+      .element-btn { flex: 1 1 48%; gap: 6px; font-size: 0.8rem; }
+      .btn { font-size: 0.78rem; padding: 12px 8px; }
+      h1 { font-size: 1.6rem; }
+      .serial-tab { padding: 6px 12px; min-width: 70px; font-size: 0.7rem; letter-spacing: 0.03em; }
+      .serial-label { font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>THE HARD DRIVE V5</h1>
+      <div class="subtitle">Weapon Apocalypse Lab ULTIMATE</div>
+    </header>
+
+    <div class="card">
+      <!-- INFO BUTTONS AT TOP -->
+      <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+        <button class="info-btn" onclick="toggleInfoModal()">
+          <span class="info-btn-text">Roll Mode Guide</span>
+        </button>
+        <button class="info-btn" onclick="toggleGuideSection()" style="background: rgba(249, 115, 22, 0.2); border-color: var(--accent); color: var(--accent);">
+          <span class="info-btn-text">Legendary Gear Mechanics Guide</span>
+        </button>
+      </div>
+
+      <!-- GUIDES SECTION (Initially Hidden) -->
+      <div id="guidesSection" style="display: none; margin-bottom: 20px;">
+        <div class="guide-tabs">
+          <button class="guide-tab active" onclick="switchGuideTab('licensed')">Licensed Parts</button>
+          <button class="guide-tab" onclick="switchGuideTab('prisms')">Prisms</button>
+          <button class="guide-tab" onclick="switchGuideTab('perks')">Legendary Perks</button>
+          <button class="guide-tab" onclick="switchGuideTab('synergies')">Synergies</button>
+        </div>
+
+        <!-- Licensed Parts Tab -->
+        <div id="guide-licensed" class="guide-content active">
+        <h3>Licensed Parts - Core Manufacturer Mechanics</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:20%">Manufacturer</th>
+              <th style="width:25%">Licensed Part</th>
+              <th style="width:55%">Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Atlas</td><td>Tracker</td><td>Secondary fire deploys homing dart/grenade that tags enemies for Smart Tracking</td></tr>
+            <tr><td>Atlas</td><td>Smart Tracking</td><td>Projectiles aggressively home in on tagged enemies</td></tr>
+            <tr><td>Hyperion</td><td>Shield</td><td>Deploys defensive Gun Shield when ADS, blocks incoming projectiles</td></tr>
+            <tr><td>Hyperion</td><td>Force Field</td><td>Gun Shield absorbs damage, converts to utility (charging weapon/regen)</td></tr>
+            <tr><td>Jakobs</td><td>Ricochet</td><td>Critical Hits reflect bullets to nearby enemies</td></tr>
+            <tr><td>Jakobs</td><td>Bouncing Bullets</td><td>Projectiles ricochet even on non-critical hits</td></tr>
+            <tr><td>Torgue</td><td>Stickies</td><td>Projectiles adhere to target, manually detonated by reload/swap</td></tr>
+            <tr><td>Torgue</td><td>Explosive</td><td>Projectiles deal Splash Damage in AoE around impact</td></tr>
+            <tr><td>Tediore</td><td>Thrown</td><td>Reloading tosses weapon as projectile that detonates</td></tr>
+            <tr><td>Tediore</td><td>Reload Throw</td><td>Thrown weapon transforms into deployable (turret/drone)</td></tr>
+            <tr><td>COV</td><td>Duct Tape</td><td>No reloads, uses heat meter; overheats with continuous fire</td></tr>
+            <tr><td>COV</td><td>Heat Crits</td><td>Increased Crit Damage when heat meter is high</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Prisms Tab -->
+      <div id="guide-prisms" class="guide-content">
+        <h3>Prisms - Tactical Ordnance and Systems</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:30%">Prism Name</th>
+              <th style="width:70%">Function</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Fire Grenade Launcher</td><td>Launches projectile creating lingering Incendiary damage pool</td></tr>
+            <tr><td>Space Laser Strike</td><td>Calls down high-damage continuous orbital laser beam</td></tr>
+            <tr><td>Constellation Mode</td><td>Temporary mode augmenting shields + elemental damage to shots</td></tr>
+            <tr><td>Knife Projectile</td><td>High-speed blade projectile with Bleeding DoT</td></tr>
+            <tr><td>Timed Explosives</td><td>Sticky charge detonating after fixed delay</td></tr>
+            <tr><td>Harpoon Shot</td><td>Tether to grapple/pull enemies or player toward target</td></tr>
+            <tr><td>Mine Launcher</td><td>Deploys proximity-triggered land mines</td></tr>
+            <tr><td>Burst Fire Mode</td><td>Temporary 3-5 round burst fire, increases DPS</td></tr>
+            <tr><td>Twin Musket Barrels</td><td>Fires two projectiles simultaneously, doubling damage</td></tr>
+            <tr><td>Hand Crank Auto</td><td>Manual crank charge-up for extremely high fire rate (Gatling)</td></tr>
+            <tr><td>Corrosive Vial</td><td>Potent Corrosive DoT, may reduce enemy armor resistance</td></tr>
+            <tr><td>Grenade Spread</td><td>Wide cone-shaped spread of multiple micro-grenades</td></tr>
+            <tr><td>Gravity Harpoon</td><td>Anchors enemy in place or severely slows movement</td></tr>
+            <tr><td>Crank-fire SMG</td><td>Wind-up mechanic releasing sustained high-volume SMG fire</td></tr>
+            <tr><td>Energy Disc</td><td>Bouncing energy disc ricocheting between enemies/surfaces</td></tr>
+            <tr><td>Wide Blast</td><td>Wide short-range spread with significant knockback</td></tr>
+            <tr><td>Railgun Shot</td><td>High-velocity armor-piercing beam with short charge-up</td></tr>
+            <tr><td>Charge Blast</td><td>Hold charge to release massive energy sphere with explosive damage</td></tr>
+            <tr><td>Laser Wire</td><td>Damaging beam trap connecting two points</td></tr>
+            <tr><td>Shock Field</td><td>AOE electrical storm rapidly depleting enemy shields</td></tr>
+            <tr><td>Singularity</td><td>Localized gravity well pulling enemies into tight cluster</td></tr>
+            <tr><td>Attack Drone</td><td>Automated flying drone providing sustained supportive fire</td></tr>
+            <tr><td>Death Sphere</td><td>Slow-moving orb firing targeted lasers at enemies</td></tr>
+            <tr><td>Micro-Rockets</td><td>Rapid targeted volley of small homing rockets</td></tr>
+            <tr><td>Energy Burst</td><td>Elemental nova explosion centered on player</td></tr>
+            <tr><td>Gravity Well</td><td>Black hole effect trapping and damaging enemies continuously</td></tr>
+            <tr><td>Dual Railguns</td><td>Two parallel high-power railgun beams, single trigger pull</td></tr>
+            <tr><td>Power Drain Spike</td><td>Steals shields/health from target to restore player resources</td></tr>
+            <tr><td>Chain Beam</td><td>Beam weapon arcing damage to multiple close enemies</td></tr>
+            <tr><td>Fuel Rod</td><td>Irradiates area with powerful Radiation DoT</td></tr>
+            <tr><td>Rocket Burst</td><td>Fires entire magazine as simultaneous rocket volley</td></tr>
+            <tr><td>Damage Marker</td><td>Tags enemy for significantly increased damage from all sources</td></tr>
+            <tr><td>Shootable Orb</td><td>Elemental orb player must shoot to detonate for massive AoE</td></tr>
+            <tr><td>Tediore Turret</td><td>Thrown reload transforms into stationary automated turret</td></tr>
+            <tr><td>Legendary Prism</td><td>Unique, highly specialized Prisms with individualized effects</td></tr>
+            <tr><td>Bipod Accuracy</td><td>Deployed bipod enhances stability, recoil reduction, accuracy while stationary</td></tr>
+            <tr><td>Color Spray (various)</td><td>Multiple elemental combinations creating unique spray effects</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Legendary Perks Tab -->
+      <div id="guide-perks" class="guide-content">
+        <h3>Legendary Perks - Unique Gear Attributes</h3>
+        <p style="font-size:0.7rem; color:var(--text-muted); margin-bottom:12px;">Powerful fixed attributes tied to specific Unique/Legendary weapons</p>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:30%">Perk Name</th>
+              <th style="width:70%">Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Timber</td><td>Fires spread of large wood-patterned projectiles with high impact/knockback</td></tr>
+            <tr><td>Tactical Rounds</td><td>Reloading grants random combat buff (Fire Rate/Crit Damage/Movement Speed)</td></tr>
+            <tr><td>Space Laser</td><td>Calls down localized laser strike on target</td></tr>
+            <tr><td>Fragcendiary Grenades</td><td>Grenade throws deal Incendiary damage, leave burning area</td></tr>
+            <tr><td>Constellation</td><td>Fires triple projectiles in corkscrewing helix pattern</td></tr>
+            <tr><td>Precision</td><td>Increased Crit Damage proportional to distance from target</td></tr>
+            <tr><td>Prison Rules</td><td>Massive Melee Damage increase when hitting enemy near wall/object</td></tr>
+            <tr><td>LUV</td><td>Projectiles heal allies; kills drop health-restoring items</td></tr>
+            <tr><td>All-Arounder</td><td>Perfectly balanced stats, optimal performance with no weaknesses</td></tr>
+            <tr><td>Parley</td><td>Critical Hits steal enemy Health, healing player</td></tr>
+            <tr><td>Homemade Ingenuity</td><td>Extremely high fire rate; rapid overheat but almost instant cooldown</td></tr>
+            <tr><td>Pair of Thieves</td><td>Reloading one weapon instantly reloads paired item</td></tr>
+            <tr><td>Stalker</td><td>Consecutive Crits return ammo to magazine, increase Ricochet chance</td></tr>
+            <tr><td>Holy Hell</td><td>Massive damage buff but immediately disables player shield on firing</td></tr>
+            <tr><td>Midday</td><td>Powerful Fire Nova explosion on kill</td></tr>
+            <tr><td>Proprioception</td><td>Reloading creates ghost copies of previous projectiles homing to target</td></tr>
+            <tr><td>Dueling Pistol</td><td>Large temporary damage boost after swapping to weapon</td></tr>
+            <tr><td>Soothslayer</td><td>Fixed pentagram pellet spread; heavy Incendiary with multiple DoT stacks</td></tr>
+            <tr><td>Blazing Barrel</td><td>Increased Fire damage based on weapon's heat level</td></tr>
+            <tr><td>Heirloom</td><td>Slow pronounced wave pattern with high knockback/crowd control</td></tr>
+            <tr><td>Propagation</td><td>Crits tether/damage nearby enemies with elemental roots spreading from target</td></tr>
+            <tr><td>Bullet Pollinator</td><td>Thrown reload explodes into swarm of micro-drones/projectiles</td></tr>
+            <tr><td>Fixer-Upper</td><td>Dealing damage repairs player shield or deployable vehicle health</td></tr>
+            <tr><td>Strike Twice</td><td>Projectile impacts, then lightning strikes same enemy one second later</td></tr>
+            <tr><td>Radiation Exposure</td><td>Creates large lingering Radiation bubble applying DoT to enemies inside</td></tr>
+            <tr><td>Colorful Mess</td><td>Explosions cycle through all five elemental damage types</td></tr>
+            <tr><td>Force Bunt</td><td>Dramatically increased melee knockback, sends enemies flying</td></tr>
+            <tr><td>Adoration</td><td>Hit enemies may be Charmed, fighting for player temporarily</td></tr>
+            <tr><td>Energy Transfer</td><td>Chains Shock damage to nearby enemies, restores player shields</td></tr>
+            <tr><td>Superheated</td><td>Fast burst of high-velocity dual-element plasma orbs (Shock/Radiation)</td></tr>
+            <tr><td>Slow Burn</td><td>Stacking Fire DoT increasing in potency the longer it remains active</td></tr>
+            <tr><td>Sierpinski</td><td>Projectiles fracture into complex grid-like explosion pattern</td></tr>
+            <tr><td>Storm Cloud</td><td>Deploys floating elemental cloud continuously raining damage below</td></tr>
+            <tr><td>Big Name Hunter</td><td>Significant bonus damage against Badass and Boss-tier enemies</td></tr>
+            <tr><td>Amper Camper</td><td>Standing still charges massive single-shot Amp Damage bonus</td></tr>
+            <tr><td>Defense Protocol</td><td>Deploys frontal shield; sprint-bash enemies for heavy damage/knockback</td></tr>
+            <tr><td>Kismet</td><td>Increases Luck (loot drop chance) on kill, stacking temporarily</td></tr>
+            <tr><td>Silence</td><td>Tiny pistol with massive damage/uncontrollable recoil; explosive projectiles</td></tr>
+            <tr><td>Ultima Ratio Regum</td><td>Extreme zoom highlighting enemy critical spots; 100% accuracy while scoped</td></tr>
+            <tr><td>Bilateral</td><td>Killing enemy instantly restores Health and Shields equally</td></tr>
+            <tr><td>Bouncing Biscuits</td><td>Fires sawblade projectiles ricocheting off environment up to 5 times</td></tr>
+            <tr><td>Delegation</td><td>Damage taken partially redirected to active clone/pet/drone</td></tr>
+            <tr><td>Asymptotic</td><td>Accuracy/fire rate increase steadily during continuous fire</td></tr>
+            <tr><td>Rage</td><td>Damage output increases as player Health decreases</td></tr>
+            <tr><td>Chief Execution Officer</td><td>Melee kills cause enemy explosion with guaranteed minor loot drops</td></tr>
+            <tr><td>Burning Desire</td><td>High fire rate; applies massively stacking Fire DoT with no cap</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Synergies Tab -->
+      <div id="guide-synergies" class="guide-content">
+        <h3>Insane Synergy Combinations</h3>
+        <p style="font-size:0.7rem; color:var(--text-muted); margin-bottom:12px;">Powerful combinations that create devastating gameplay effects</p>
+
+        <div class="combo-card">
+          <h4>1. The Atlas Homing Singularity Barrage</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> Atlas Smart Tracking<br>
+            <strong>Prisms:</strong> Singularity + Damage Marker<br>
+            <strong>Perks:</strong> Whistler (Atling Gun) + Bilateral (Symmetry)
+          </div>
+          <div class="combo-effect">
+            COMBO: Pull enemies with Singularity, tag center with Damage Marker, fire Smart Tracking. Whistler ensures 100% hits on marked target. Massive damage spreads to cluster, instant wipe triggers Bilateral for full sustain.
+          </div>
+        </div>
+
+        <div class="combo-card">
+          <h4>2. The Tediore Recursive Defense System</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> Tediore Reload Throw<br>
+            <strong>Prisms:</strong> Micro-Rockets<br>
+            <strong>Perks:</strong> Husky Auto Turret + Pitcher (Chuck) + Scarce (Vamoose)
+          </div>
+          <div class="combo-effect">
+            COMBO: Empty magazine deploys Husky turret with massive Pitcher damage bonus. Scarce grants invisibility during deployment. Micro-Rockets provide burst damage between reloads. Automated defense with stealth repositioning.
+          </div>
+        </div>
+
+        <div class="combo-card">
+          <h4>3. The COV Overheating Damage Cascade</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> COV Heat Crits<br>
+            <strong>Prisms:</strong> Corrosive Vial + Energy Burst<br>
+            <strong>Perks:</strong> Blazing Barrel (Hot Slugger) + Fixer-Upper (Truck)
+          </div>
+          <div class="combo-effect">
+            COMBO: Fire continuously to activate Heat Crits + Blazing Barrel bonuses. Corrosive Vial primes armored enemies. Continuous damage via Fixer-Upper converts to shield repair. Energy Burst clears trash during high heat.
+          </div>
+        </div>
+
+        <div class="combo-card">
+          <h4>4. The Jakobs Infinite Crit/Explosion Chain</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> Jakobs Ricochet<br>
+            <strong>Prisms:</strong> Gravity Harpoon<br>
+            <strong>Perks:</strong> Trample (Lucian's Flank) + Stalker (Rowan's Charge) + Propagation (Borstel Ballista)
+          </div>
+          <div class="combo-effect">
+            COMBO: Harpoon enemy for guaranteed crits. Ricochet triggers Trample explosions. Stalker refunds ammo, creating infinite chain of critical, explosive, ricocheting, and tethering damage.
+          </div>
+        </div>
+
+        <div class="combo-card">
+          <h4>5. The Hyperion Amped Defense Cannon</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> Hyperion Force Field<br>
+            <strong>Prisms:</strong> Railgun Shot<br>
+            <strong>Perks:</strong> Amper Camper (Goalkeeper) + Hivemind (Birt's Bees) + Defense Protocol (Bully)
+          </div>
+          <div class="combo-effect">
+            COMBO: Deploy Gun Shield, stand still to charge Amper Camper. Incoming damage absorbed by Force Field maintains Hivemind full-shield Amp bonus. Railgun Shot receives triple damage boost (Force Field + Amper Camper + Hivemind).
+          </div>
+        </div>
+
+        <div class="combo-card">
+          <h4>6. The Elemental Triad Lockdown</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> COV Duct Tape<br>
+            <strong>Prisms:</strong> Cryo + Rad + Shock (Color Spray) + Shock Field<br>
+            <strong>Perks:</strong> Superheated (Plasma Coil) + Slow Burn (Asher's Rise)
+          </div>
+          <div class="combo-effect">
+            COMBO: Shock Field breaks shields, apply Cryo + Rad + Shock for status lockdown. Duct Tape + Superheated plasma maintain fire. Slow Burn adds massive stacking Fire DoT. Simultaneous lock, shield prevention, and devastating multi-element DoT.
+          </div>
+        </div>
+
+        <div class="combo-card">
+          <h4>7. The Torgue Overkill Chain</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> Torgue Stickies<br>
+            <strong>Prisms:</strong> Rocket Burst + Grenade Spread<br>
+            <strong>Perks:</strong> Granted (Kaoson) + Micro-Rockets (621.0 - Ravenfire)
+          </div>
+          <div class="combo-effect">
+            COMBO: Cover target with Stickies. Fire Rocket Burst/Grenade Spread to saturate area. Reload triggers massive Kaoson detonation bonus, instant wipe. Follow with 621.0 Micro-Rockets to lock onto stragglers.
+          </div>
+        </div>
+
+        <div class="combo-card">
+          <h4>8. The Recursive Ghost Reload</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> Tediore Thrown<br>
+            <strong>Prisms:</strong> Railgun Shot<br>
+            <strong>Perks:</strong> Proprioception (Seventh Sense) + Strike Twice (Bottled Lightning) + Pair of Thieves (Bonnie and Clyde)
+          </div>
+          <div class="combo-effect">
+            COMBO: Fire charged Railgun Shot. Reload triggers Thrown projectile + Proprioception ghost shot, hitting enemy 3 times. Swap to paired weapon for instant reload via Pair of Thieves. Strike Twice adds delayed lightning. Rapid cycle repeats.
+          </div>
+        </div>
+
+        <div class="combo-card">
+          <h4>9. The Melee Execution Nova</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> Jakobs Bouncing Bullets<br>
+            <strong>Prisms:</strong> Knife Projectile + Shock Field<br>
+            <strong>Perks:</strong> Chief Execution Officer (Goremaster) + Force Bunt (Kickballer) + Midday (Phantom Flame)
+          </div>
+          <div class="combo-effect">
+            COMBO: Shock Field weakens shields. Dash for Melee kill triggering Goremaster explosion + Midday Fire Nova, clearing area. Knife Projectile or Force Bunt knockback executes survivors.
+          </div>
+        </div>
+
+        <div class="combo-card">
+          <h4>10. The Elemental Cycling Chaos</h4>
+          <div class="combo-parts">
+            <strong>Licensed:</strong> COV Duct Tape<br>
+            <strong>Prisms:</strong> Chain Beam + Energy Transfer<br>
+            <strong>Perks:</strong> Colorful Mess (Kaleidosplode) + Burning Desire (Hellfire)
+          </div>
+          <div class="combo-effect">
+            COMBO: Duct Tape maintains Chain Beam on multiple enemies triggering Energy Transfer chain. Elemental damage + Chain triggers Colorful Mess, cycling all elements. Creates screen-wide multi-layered elemental DoT. Burning Desire ensures Fire DoT stacks infinitely.
+          </div>
+        </div>
+
+        <p style="font-size:0.65rem; color:var(--text-muted); margin-top:20px; font-style:italic;">
+          More combinations available - experiment with different part combinations to discover your own synergies!
+        </p>
+      </div>
+      </div>
+      <!-- End of Guides Section -->
+
+      <div class="card-title">Mode Selection</div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" data-mode="regular" onclick="setMode('regular')">
+          <div class="mode-title">⚡ Regular Mode</div>
+          <div class="mode-desc">Apocalypse & Random Chaos rolls</div>
+        </button>
+        <button class="mode-btn" data-mode="brickedup_builder" onclick="setMode('brickedup_builder')">
+          <div class="mode-title">🏗️ BrickedUp Builder</div>
+          <div class="mode-desc">Build your perfect weapon</div>
+        </button>
+      </div>
+
+      <div class="form-group" id="weaponSourceGroup">
+        <label>
+          <span class="label-with-tooltip">
+            Weapon Source
+            <span id="builderTooltip" class="tooltip-icon" style="display: none;" onclick="showBuilderInfo()">
+              ?
+            </span>
+          </span>
+        </label>
+        
+        <!-- Stock Weapon Selector - Always Visible -->
+        <select id="weaponSourceStock" style="width:100%; margin-bottom: 12px;" onchange="clearPaste(); handleWeaponSourceChange()">
+          <option value="">Select a stock weapon...</option>
+          <optgroup label="Pistols">
+            <option value="Pistol|daedalus">Daedalus Pistol</option>
+            <option value="Pistol|jakobs">Jakobs Pistol</option>
+            <option value="Pistol|torgue">Torgue Pistol</option>
+          </optgroup>
+          <optgroup label="Shotguns">
+            <option value="Shotgun|jakobs">Jakobs Shotgun</option>
+            <option value="Shotgun|maliwan">Maliwan Shotgun</option>
+            <option value="Shotgun|torgue">Torgue Shotgun</option>
+          </optgroup>
+          <optgroup label="Assault Rifles">
+            <option value="Assault Rifle|daedalus">Daedalus Assault Rifle</option>
+            <option value="Assault Rifle|tediore">Tediore Assault Rifle</option>
+            <option value="Assault Rifle|vladof">Vladof Assault Rifle</option>
+            <option value="Assault Rifle|jakobs">Jakobs Assault Rifle</option>
+          </optgroup>
+          <optgroup label="SMGs">
+            <option value="SMG|maliwan">Maliwan SMG</option>
+            <option value="SMG|ripper">Ripper SMG</option>
+            <option value="SMG|vladof">Vladof SMG</option>
+          </optgroup>
+          <optgroup label="Snipers">
+            <option value="Sniper|jakobs">Jakobs Sniper</option>
+            <option value="Sniper|maliwan">Maliwan Sniper</option>
+            <option value="Sniper|vladof">Vladof Sniper</option>
+          </optgroup>
+        </select>
+        
+        <!-- Paste Serial Toggle -->
+        <div class="section-toggle" onclick="toggleSection('paste')">
+          <span id="pasteToggleIcon">▼</span> Paste Serial
+        </div>
+        <div id="pasteSection" class="collapsible-section collapsed">
+          <textarea id="weaponSourcePaste" placeholder="Paste your weapon serial here..." style="min-height: 80px; margin-bottom: 12px;" onchange="clearStock(); handleWeaponSourceChange()"></textarea>
+        </div>
+      </div>
+      
+      <!-- Base Weapon Toast (Floating) -->
+      <div id="baseWeaponToast" class="base-weapon-toast"></div>
+      
+      <!-- Builder Info Modal (Centered Popup) -->
+      <div id="builderInfoModal" class="info-modal" onclick="hideBuilderInfo()">
+        <div class="info-modal-content" onclick="event.stopPropagation()">
+          <button class="info-modal-close" onclick="hideBuilderInfo()">×</button>
+          <strong style="font-size: 1.1rem; display: block; margin-bottom: 12px;">🏗️ Builder Mode</strong>
+          <p>Select a stock weapon or paste a serial above. The base weapon is preserved - only your selected parts are added.</p>
+        </div>
+      </div>
+
+      <!-- Synergies Section (Builder Mode Only) -->
+      <div id="synergiesSection" class="synergy-section">
+        <div class="form-group">
+          <label style="cursor: pointer;" onclick="toggleSynergies()">
+            ⚡ Legendary Synergies 
+            <span id="synergiesToggleIcon" style="font-size: 0.7rem; color: var(--text-muted);">▼ Click to expand</span>
+          </label>
+          <div id="synergyGrid" class="synergy-grid" style="display: none;"></div>
+        </div>
+      </div>
+
+      <!-- Saved Builds Section (Visible in Both Modes) -->
+      <div class="saved-builds-section">
+        <div class="form-group">
+          <label style="cursor: pointer;" onclick="toggleSavedBuilds()">
+            💾 Saved Builds 
+            <span id="savedBuildsToggleIcon" style="font-size: 0.7rem; color: var(--text-muted);">▼ Click to expand</span>
+          </label>
+          
+          <div id="savedBuildsContainer" style="display: none;">
+            <!-- Action Buttons -->
+            <div class="saved-builds-actions">
+              <button class="btn btn-primary" onclick="saveCurrentBuild()">💾 Save Current</button>
+              <button class="btn btn-secondary" onclick="exportSelected('json')">📤 Export JSON</button>
+              <button class="btn btn-secondary" onclick="exportSelected('html')">🎨 Export HTML</button>
+              <button class="btn btn-secondary" onclick="importBuilds()">📥 Import</button>
+              <button class="btn btn-secondary" onclick="deleteSelected()">🗑️ Delete Selected</button>
+            </div>
+            
+            <!-- Builds List -->
+            <div id="buildsGrid" class="builds-grid"></div>
+            
+            <!-- Hidden file input for import -->
+            <input type="file" id="importBuildsFile" accept=".json" style="display: none;" onchange="handleImportFile(event)">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Element Override</label>
+        <div class="element-grid">
+          <button class="element-btn" data-element="fire" onclick="toggleElement('fire')">
+            <div class="el-icon">🔥</div><div class="el-name">FIRE</div>
+          </button>
+          <button class="element-btn" data-element="cryo" onclick="toggleElement('cryo')">
+            <div class="el-icon">❄️</div><div class="el-name">CRYO</div>
+          </button>
+          <button class="element-btn" data-element="corrosive" onclick="toggleElement('corrosive')">
+            <div class="el-icon">☣️</div><div class="el-name">CORROSIVE</div>
+          </button>
+          <button class="element-btn" data-element="shock" onclick="toggleElement('shock')">
+            <div class="el-icon">⚡</div><div class="el-name">SHOCK</div>
+          </button>
+          <button class="element-btn" data-element="radiation" onclick="toggleElement('radiation')">
+            <div class="el-icon">☢️</div><div class="el-name">RADIATION</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Licensed Parts</label>
+        <div class="licensed-grid" id="licensedPartsGrid">
+          <label class="licensed-item"><input type="checkbox" data-licensed="atlas" value="tracker"><div><div class="part-name" style="color:#fb923c">Atlas Tracker</div><div class="part-effect">Smart Tracking</div></div></label>
+          <label class="licensed-item"><input type="checkbox" data-licensed="hyperion" value="shield"><div><div class="part-name" style="color:#a855f7">Hyperion Shield</div><div class="part-effect">Force Field</div></div></label>
+          <label class="licensed-item"><input type="checkbox" data-licensed="jakobs" value="ricochet"><div><div class="part-name" style="color:#fbbf24">Jakobs Ricochet</div><div class="part-effect">Bouncing Bullets</div></div></label>
+          <label class="licensed-item"><input type="checkbox" data-licensed="torgue" value="stickies"><div><div class="part-name" style="color:#ef4444">Torgue Stickies</div><div class="part-effect">Explosive</div></div></label>
+          <label class="licensed-item"><input type="checkbox" data-licensed="tediore" value="thrown"><div><div class="part-name" style="color:#4ade80">Tediore Thrown</div><div class="part-effect">Reload Throw</div></div></label>
+          <label class="licensed-item"><input type="checkbox" data-licensed="cov" value="ducttape"><div><div class="part-name" style="color:#a78bfa">COV Duct Tape</div><div class="part-effect">Heat Crits</div></div></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Prisms</label>
+        <div class="scrollable-grid-container">
+          <div class="licensed-grid" id="prismsGrid"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Legendary Perks</label>
+        <div class="scrollable-grid-container">
+          <div class="licensed-grid" id="perksGrid"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Weapon Level</label>
+        <div class="level-selector">
+          <button type="button" class="level-btn" data-level="1" onclick="setLevel(1)">LEVEL 1</button>
+          <button type="button" class="level-btn active" data-level="50" onclick="setLevel(50)">LEVEL 50</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="rollBtn" onclick="handleBuildButton('apocalypse')">⚡ Apocalypse</button>
+        <button class="btn btn-secondary" id="chaosBtn" onclick="handleBuildButton('chaos')">🎲 Random Chaos</button>
+        <button class="btn btn-secondary" id="builderBtn" onclick="handleBuildButton('builder')" style="display: none; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000;">🏗️ Build Weapon</button>
+      </div>
+
+      <div class="output-section">
+        <div class="serial-header">
+          <span class="serial-label" style="display: block; text-align: center; margin-bottom: 12px;">Result</span>
+          <div class="serial-tabs" style="justify-content: center;">
+            <button class="serial-tab active" data-tab="serial" onclick="switchSerialTab('serial')">Serial</button>
+            <button class="serial-tab" data-tab="base85" onclick="switchSerialTab('base85')">Base85</button>
+          </div>
+        </div>
+        <div class="serial-output empty" id="outputSerial">— No roll yet —</div>
+
+        <div id="weaponDetails" style="display:none; margin-top:16px;">
+          <div class="weapon-header">
+            <div>
+              <div class="weapon-type" id="weaponType">—</div>
+              <div class="weapon-level" id="weaponLevel">Level —</div>
+            </div>
+            <div class="weapon-rarity" id="weaponRarity">—</div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box"><div class="stat-label">Manufacturer</div><div class="stat-value" id="statMfr">—</div></div>
+            <div class="stat-box"><div class="stat-label">Element</div><div class="stat-value" id="statElement">—</div></div>
+            <div class="stat-box"><div class="stat-label">Parts</div><div class="stat-value" id="statParts">—</div></div>
+            <div class="stat-box"><div class="stat-label">Perks</div><div class="stat-value" id="statPerks">—</div></div>
+          </div>
+
+          <div class="mods-section" id="modsSection" style="display:none;">
+            <div class="mods-title">⚡ MODIFICATIONS APPLIED</div>
+            <div class="mod-list" id="modsList"></div>
+          </div>
+
+          <div class="mods-section" id="licensedSection" style="display:none;">
+            <div class="mods-title">🔧 LICENSED PARTS</div>
+            <div class="mod-list" id="licensedList"></div>
+          </div>
+
+          <div class="mods-section" id="perksSection" style="display:none;">
+            <div class="mods-title">⭐ LEGENDARY PERKS</div>
+            <div class="mod-list" id="perksList"></div>
+          </div>
+
+          <div class="mods-section" id="prismsSection" style="display:none;">
+            <div class="mods-title">💎 PRISMS</div>
+            <div class="mod-list" id="prismsList"></div>
+          </div>
+        </div>
+
+        <div class="message" id="message"></div>
+      </div>
+    </div>
+    
+    <!-- Info Modal -->
+    <div class="modal" id="infoModal" onclick="if(event.target === this) toggleInfoModal()">
+      <div class="modal-content">
+        <span class="modal-close" onclick="toggleInfoModal()">&times;</span>
+        <div class="modal-header">Roll Mode Guide</div>
+        
+        <div class="mode-info">
+          <div class="mode-info-title">APOCALYPSE ROLL</div>
+          <div class="mode-info-desc">
+            <strong>The ultimate chaos weapon with NO LIMITS!</strong>
+            <br><br>What it does:
+            <br>• Forces your selected level (1 or 50)
+            <br>• Applies your Element Override & Licensed Parts selections
+            <br>• Auto-injects Atlas Tracker + Ammo Switcher
+            <br>• Stacks 3 random Prisms for wild effects
+            <br>• Floods weapon with 15+ random Legendary Perks
+            <br>• Your selected Prisms & Perks add on top of the random ones
+            <br><br><strong>Use when:</strong> You want MAXIMUM power and absolute mayhem!
+          </div>
+        </div>
+
+        <div class="mode-info">
+          <div class="mode-info-title">RANDOM CHAOS ROLL</div>
+          <div class="mode-info-desc">
+            <strong>Pure unpredictable randomness!</strong>
+            <br><br>What it does:
+            <br>• Forces your selected level (1 or 50)
+            <br>• Applies your Element Override & Licensed Parts selections
+            <br>• Auto-injects Atlas Tracker for tracking
+            <br>• Stacks 5 random Prisms for chaos
+            <br>• Floods weapon with 20 random Legendary Perks
+            <br>• Your selected Prisms & Perks add on top of the random flood
+            <br><br><strong>Use when:</strong> You want experimental builds and wild surprises!
+          </div>
+        </div>
+
+        <div style="margin-top:20px; padding:12px; background:rgba(168,85,247,0.1); border-radius:8px; font-size:0.8rem; color:var(--text-muted);">
+          <strong>💡 Pro Tip:</strong> All 91 Legendary Perks and 36 Prisms are available! Apocalypse and Random Chaos add your selections on top of their automatic chaos for maximum customization!
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; color:var(--text-muted); font-size:0.7rem; margin-top:20px; line-height:1.6;">
+      <div style="margin-bottom:8px;">
+        <strong style="color:var(--accent-soft);">BRICKEDNLOADED</strong> // BL4 Modding
+      </div>
+      <div style="margin-bottom:8px;">
+        <a href="https://discord.gg/ehAQwuDm" target="_blank" style="color:var(--purple); text-decoration:none; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--purple)'">
+          🎮 Join Discord Community
+        </a>
+      </div>
+      <div style="opacity:0.7;">Powered by BL4 Lab API | V5 ULTIMATE</div>
+    </div>
+  </div>
+  
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+  
+<script>
+// ============================================================
+// ULTIMATE VERSION - ALL 91 PERKS + 36 PRISMS
+// ============================================================
+const API_BASE_URL = "https://borderlands4-deserializer.nicnl.com/api/v1";
+const API_FALLBACK_URL = "https://borderlands.be/nicnl/api.php";
+
+const baseItems = {
+  Pistol: {
+    daedalus: "@Uga`vnFme!KyiHJPRG/*Fs7LKX<wJEU4=NOD6zUc#Cu%1G",
+    jakobs: "@UgbV{rFme!KV1i1c3bm+4MJgVu9_k%xQ*}^(P<>FdP~#8",
+    torgue: "@Ugct)%Fme!KY7/guRG/`es7Lif?L*~5b!rW26)GnJ",
+  },
+  Shotgun: {
+    jakobs: "@Ugd_t@Fme!Kc70H3RG/*Fs75`i9%>$HFKP~I6e<*I7AhP9",
+    maliwan: "@UgeU_{Fme!KsDDstRG}7?sG&lUDv272`iB~Ws)Oo-`h$vvI)@tS000",
+    torgue: "@UgfIh4Fme!KXjV{ZRG/`es7HlF?L+lLeQFLW6lxTz73voP",
+  },
+  "Assault Rifle": {
+    daedalus: "@Ugfs(8Fme!K>ON3u)Swbos7HOOQ*ltKP^(bkP~%YVP$f/>5d",
+    tediore: "@Ugg66CFme!KVuSLc3U#PNMXDYu9;#AjQEO14P@_=45C",
+    vladof: "@Ugvelk2}TYgT!ILdMipvNi8/DyW};%EI&}wi3RMa<3v~_^4*>",
+    jakobs: "@UgzR8/2}TYgO!WyWjVe^47Immdb?Q@fP%lv{Q7KXDQ2h`",
+  },
+  SMG: {
+    maliwan: "@Ugw$Yw2}TYg41^0RjVe^47ImnhLy?M!dWqW99n>jQDO4`hIMfgU",
+    ripper: "@Ugv?-o2}TYgOur2(jVjcl5*4YKsF/pjs7~!cjY5?/)k2j+00",
+    vladof: "@UgxFw!2}TYgjO`98jVjck5*4YOsGg{ns7=j5^+B~ltwQBOy+iFo00",
+  },
+  Sniper: {
+    jakobs: "@Ugy3L+2}TYgT#^cvMir`2hg#I5@}cgb=Ak+@2XzZ/4gm",
+    maliwan: "@Ugydj=2}TYgOny*lRG/{Js74JNid0P0O4LhKr}Cgqp;Do4q57eQ2><",
+    vladof: "@Uguq~c2}TYgOq~cSjVe^47S*Uo^+f$dg++BL59$;u6)G2M9/8",
+  },
+  "Heavy Weapon": {
+    torgue: "@UgsH3q2}TYgT)SuTjVjcl5*9V&sGcZF",
+    vladof: "@Ugrl^i2}TYgT)bd7jVjck8g<1RsGh8Ps3^R!",
+  }
+};
+
+const ELEMENT_CODES = {
+  fire: "{1:12}", cryo: "{1:11}", corrosive: "{1:10}",
+  shock: "{1:14}", radiation: "{1:13}"
+};
+
+// LICENSED PARTS ARE WEAPON-TYPE SPECIFIC
+// Each weapon type has its own codes - disabled until properly implemented per-weapon
+const LICENSED_PARTS = {};
+const LICENSED_PARTS_MAP = new Map();
+
+const WEAPON_TYPE_MAP = {
+  2: { type: "Pistol", manufacturer: "Daedalus" },
+  3: { type: "Pistol", manufacturer: "Jakobs" },
+  4: { type: "Pistol", manufacturer: "Order" },
+  5: { type: "Pistol", manufacturer: "Tediore" },
+  6: { type: "Pistol", manufacturer: "Torgue" },
+  7: { type: "Shotgun", manufacturer: "Ripper" },
+  8: { type: "Shotgun", manufacturer: "Daedalus" },
+  9: { type: "Shotgun", manufacturer: "Jakobs" },
+  10: { type: "Shotgun", manufacturer: "Maliwan" },
+  11: { type: "Shotgun", manufacturer: "Tediore" },
+  12: { type: "Shotgun", manufacturer: "Torgue" },
+  13: { type: "Assault Rifle", manufacturer: "Daedalus" },
+  14: { type: "Assault Rifle", manufacturer: "Tediore" },
+  15: { type: "Assault Rifle", manufacturer: "Order" },
+  16: { type: "Sniper", manufacturer: "Vladof" },
+  17: { type: "Assault Rifle", manufacturer: "Torgue" },
+  18: { type: "Assault Rifle", manufacturer: "Vladof" },
+  19: { type: "SMG", manufacturer: "Ripper" },
+  20: { type: "SMG", manufacturer: "Daedalus" },
+  21: { type: "SMG", manufacturer: "Maliwan" },
+  22: { type: "SMG", manufacturer: "Vladof" },
+  23: { type: "Sniper", manufacturer: "Ripper" },
+  24: { type: "Sniper", manufacturer: "Jakobs" },
+  25: { type: "Sniper", manufacturer: "Maliwan" },
+  26: { type: "Sniper", manufacturer: "Order" },
+  27: { type: "Assault Rifle", manufacturer: "Jakobs" },
+  273: { type: "Heavy Weapon", manufacturer: "Torgue" },
+  275: { type: "Heavy Weapon", manufacturer: "Ripper" },
+  282: { type: "Heavy Weapon", manufacturer: "Vladof" },
+  289: { type: "Heavy Weapon", manufacturer: "Maliwan" }
+};
+
+// Only element codes are universal across all weapons
+const PART_NAMES = {
+  "{1:10}": "Corrosive Element",
+  "{1:11}": "Cryo Element",
+  "{1:12}": "Fire Element",
+  "{1:13}": "Radiation Element",
+  "{1:14}": "Shock Element"
+};
+
+let currentMode = "regular";
+let selectedElement = null;
+let selectedLevel = 50;
+let currentSerial = "";
+let currentDeserialized = "";
+
+// Builder mode state
+let builderState = {
+  baseWeapon: null,
+  baseSerial: null,
+  baseDeserialized: null,
+  baseType: null // "stock" or "paste"
+};
+
+// ALL 91 LEGENDARY PERKS FROM GAME DATA
+const LEGENDARY_PERKS = [
+  { code: "{13:57}", name: "Timber", weapon: "Lumberjack" },
+  { code: "{13:8}", name: "Tactical Rounds", weapon: "Oscar Mike" },
+  { code: "{13:75}", name: "Space Laser", weapon: "Oscar Mike" },
+  { code: "{13:67}", name: "Fragcendiary Grenades", weapon: "Oscar Mike" },
+  { code: "{13:77}", name: "Constellation", weapon: "Star Helix" },
+  { code: "{13:76}", name: "Constellation UB", weapon: "Star Helix" },
+  { code: "{2:78}", name: "Precision", weapon: "Rangefinder" },
+  { code: "{2:1}", name: "Prison Rules", weapon: "Zipper" },
+  { code: "{8:54}", name: "LUV", weapon: "Acey May" },
+  { code: "{8:52}", name: "All-Arounder", weapon: "Bod" },
+  { code: "{20:64}", name: "Parley", weapon: "Darkbeast" },
+  { code: "{20:60}", name: "Homemade Ingenuity", weapon: "Luty Madlad" },
+  { code: "{27:73}", name: "Pair of Thieves", weapon: "Bonnie and Clyde" },
+  { code: "{27:75}", name: "Stalker", weapon: "Rowan's Charge" },
+  { code: "{3:57}", name: "Holy Hell", weapon: "King's Gambit" },
+  { code: "{3:77}", name: "Midday", weapon: "Phantom Flame" },
+  { code: "{3:80}", name: "Proprioception", weapon: "Seventh Sense" },
+  { code: "{3:72}", name: "Dueling Pistol", weapon: "San Saba Songbird" },
+  { code: "{9:82}", name: "Soothslayer", weapon: "Hellwalker" },
+  { code: "{9:79}", name: "Blazing Barrel", weapon: "Hot Slugger" },
+  { code: "{9:90}", name: "Heirloom", weapon: "T.K's wave" },
+  { code: "{24:72}", name: "Propagation", weapon: "Borstel Ballista" },
+  { code: "{24:74}", name: "Bullet Pollinator", weapon: "Boomslang" },
+  { code: "{24:75}", name: "Fixer-Upper", weapon: "Truck" },
+  { code: "{289:26}", name: "Strike Twice", weapon: "Bottled Lightning" },
+  { code: "{289:24}", name: "Radiation Exposure", weapon: "Gamma Void" },
+  { code: "{10:56}", name: "Colorful Mess", weapon: "Kaleidosplode" },
+  { code: "{10:7}", name: "Force Bunt", weapon: "Kickballer" },
+  { code: "{10:58}", name: "Adoration", weapon: "Sweet Embrace" },
+  { code: "{21:59}", name: "Energy Transfer", weapon: "Ohm I Got" },
+  { code: "{21:62}", name: "Superheated", weapon: "Plasma Coil" },
+  { code: "{25:79}", name: "Slow Burn", weapon: "Asher's Rise" },
+  { code: "{25:20}", name: "Sierpinski", weapon: "Complex Root" },
+  { code: "{25:60}", name: "Storm Cloud", weapon: "Katagawa's Revenge" },
+  { code: "{15:2}", name: "Big Name Hunter", weapon: "G.M.R." },
+  { code: "{15:56}", name: "Amper Camper", weapon: "Goalkeeper" },
+  { code: "{4:75}", name: "Defense Protocol", weapon: "Bully" },
+  { code: "{4:81}", name: "Kismet", weapon: "Lucky Clover" },
+  { code: "{4:79}", name: "Silence", weapon: "Noisy Cricket" },
+  { code: "{26:75}", name: "Ultima Ratio Regum", weapon: "Fisheye" },
+  { code: "{26:72}", name: "Bilateral", weapon: "Symmetry" },
+  { code: "{275:30}", name: "Bouncing Biscuits", weapon: "Disc Jockey" },
+  { code: "{275:1}", name: "Delegation", weapon: "Streamer" },
+  { code: "{7:64}", name: "Asymptotic", weapon: "Convergence" },
+  { code: "{7:18}", name: "Rage", weapon: "Golden God" },
+  { code: "{7:1}", name: "Chief Execution Officer", weapon: "Goremaster" },
+  { code: "{19:20}", name: "Burning Desire", weapon: "Hellfire" },
+  { code: "{19:17}", name: "Pamplemousse", weapon: "Prince Harming " },
+  { code: "{23:20}", name: "Stray", weapon: "Stray" },
+  { code: "{23:21}", name: "Scarce", weapon: "Vamoose" },
+  { code: "{14:34}", name: "Pitcher", weapon: "Chuck" },
+  { code: "{14:39}", name: "Conquerer", weapon: "Divided Focus" },
+  { code: "{14:76}", name: "Executor", weapon: "Murmur" },
+  { code: "{5:59}", name: "D.O.P.E. Bouys", weapon: "Budget Deity" },
+  { code: "{5:65}", name: "Grasp", weapon: "Ruby's Grasp" },
+  { code: "{5:67}", name: "Juggler", weapon: "Sideshow" },
+  { code: "{11:75}", name: "Mutualism", weapon: "Anarchy" },
+  { code: "{11:77}", name: "Wide Net", weapon: "Forsaken Chaos" },
+  { code: "{11:79}", name: "Husky auto turret", weapon: "Husky Friend" },
+  { code: "{17:54}", name: "Rotary Gun", weapon: "Bugbear" },
+  { code: "{17:55}", name: "Iced Out", weapon: "Cold Shoulder" },
+  { code: "{17:77}", name: "Spudgun", weapon: "Potato Thrower IV" },
+  { code: "{273:40}", name: "621.0", weapon: "Ravenfire" },
+  { code: "{273:35}", name: "Gungnir", weapon: "Sprezzatura" },
+  { code: "{6:52}", name: "Royal Armory", weapon: "Queen's Rest" },
+  { code: "{6:54}", name: "Flesh Eaters", weapon: "Roach" },
+  { code: "{12:56}", name: "Lightweight", weapon: "Lead Balloon" },
+  { code: "{12:58}", name: "Full Coverage", weapon: "Linebacker" },
+  { code: "{18:70}", name: "Prophetic", weapon: "Aegon's Dream" },
+  { code: "{18:1}", name: "Trample", weapon: "Lucian's Flank" },
+  { code: "{18:92}", name: "Scrap canon ", weapon: "Whiskey Foxtrot" },
+  { code: "{18:90}", name: "Overdrive", weapon: "Whiskey Foxtrot" },
+  { code: "{18:64}", name: "Rip Rockets", weapon: "Wombo Combo" },
+  { code: "{282:25}", name: "Whistler", weapon: "Atling Gun" },
+  { code: "{282:2}", name: "Inkling ", weapon: "Tinged Inkling" },
+  { code: "{22:87}", name: "Hivemind", weapon: "Birt's Bees" },
+  { code: "{22:66}", name: "Granted", weapon: "Kaoson" },
+  { code: "{22:68}", name: "Keep It Coming", weapon: "Onslaught" },
+  { code: "{16:1}", name: "Pipin' Hot Barrels", weapon: "Finnity XXX-L" },
+  { code: "{16:68}", name: "Crowd Sourced", weapon: "Midnight Defiance" },
+  { code: "{16:72}", name: "Reconfigure", weapon: "Stop Gap " },
+  { code: "{9:76}", name: "Corrosive + Cryo + Fire", weapon: "Color Spray" },
+  { code: "{9:75}", name: "Corrosive + Cryo + Rad", weapon: "Color Spray" },
+  { code: "{9:74}", name: "Corrosive + Cryo + Shock", weapon: "Color Spray" },
+  { code: "{9:73}", name: "Corrosive + Fire + Rad", weapon: "Color Spray" },
+  { code: "{9:72}", name: "Corrosive + Fire + Shock", weapon: "Color Spray" },
+  { code: "{9:71}", name: "Corrosive + Rad + Shock", weapon: "Color Spray" },
+  { code: "{9:16}", name: "Cryo + Fire + Rad", weapon: "Color Spray" },
+  { code: "{9:1}", name: "Cryo + Fire + Shock", weapon: "Color Spray" },
+  { code: "{9:84}", name: "Cryo + Rad + Shock", weapon: "Color Spray" },
+  { code: "{9:77}", name: "Fire + Rad + Shock", weapon: "Color Spray" }
+];
+
+// VALID UNDERBARREL PARTS FROM MASTER LIST
+// These are real part codes that exist in the game
+const PRISM_POOL = [
+  // Daedalus AR (Type 13)
+  { code: "{13:61}", name: "Shotgun" },
+  { code: "{13:62}", name: "Micro-Rocket POD" },
+  { code: "{13:63}", name: "Grenade Launcher" },
+  { code: "{13:67}", name: "Fragcendiary Grenades" },
+  { code: "{13:75}", name: "Space Laser" },
+  { code: "{13:76}", name: "Constellation Mode" },
+  // Daedalus Pistol (Type 2)
+  { code: "{2:47}", name: "Knife Launcher" },
+  { code: "{2:48}", name: "Taser" },
+  { code: "{2:75}", name: "Demolition Charge" },
+  // Daedalus Shotgun (Type 8)
+  { code: "{8:43}", name: "Gravity Harpoon" },
+  { code: "{8:45}", name: "Micro-Rocket POD" },
+  { code: "{8:50}", name: "Proxy Mine Launcher" },
+  // Daedalus SMG (Type 20)
+  { code: "{20:48}", name: "Shotgun" },
+  { code: "{20:49}", name: "Overcharge" },
+  { code: "{20:79}", name: "Grenade Launcher" },
+  // Jakobs AR (Type 27)
+  { code: "{27:55}", name: "Shotgun" },
+  { code: "{27:56}", name: "Double Flintlocks" },
+  { code: "{27:57}", name: "Hand Crank Auto" },
+  // Jakobs Pistol (Type 3)
+  { code: "{3:45}", name: "Knife Launcher" },
+  { code: "{3:46}", name: "Zip Rockets" },
+  { code: "{3:68}", name: "Corrosive Vial" },
+  // Jakobs Shotgun (Type 9)
+  { code: "{9:45}", name: "Spread Launcher" },
+  { code: "{9:46}", name: "Gravity Harpoon" },
+  { code: "{9:50}", name: "Knife Launcher" },
+  // Maliwan Shotgun (Type 10)
+  { code: "{10:43}", name: "Beam Tosser" },
+  { code: "{10:44}", name: "Energy Disc" },
+  { code: "{10:49}", name: "Energy Blast" },
+  // Maliwan SMG (Type 21)
+  { code: "{21:45}", name: "Railgun" },
+  { code: "{21:46}", name: "Energy Discharge" },
+  { code: "{21:53}", name: "Laser Wire" },
+  // Maliwan Sniper (Type 25)
+  { code: "{25:48}", name: "Shock Field" },
+  { code: "{25:49}", name: "Singularity" },
+  { code: "{25:53}", name: "Rocket Pod" },
+  // Order Pistol (Type 4)
+  { code: "{4:43}", name: "Micro-Rockets" },
+  { code: "{4:44}", name: "Energy Burst" },
+  { code: "{4:72}", name: "Gravity Well" },
+  // Ripper Shotgun (Type 7)
+  { code: "{7:48}", name: "Lightning Beam" },
+  { code: "{7:49}", name: "Gauss Gun" },
+  { code: "{7:80}", name: "Fuel Rod Discharge" },
+  // Tediore Shotgun (Type 11)
+  { code: "{11:50}", name: "Deployable Barrier" },
+  { code: "{11:51}", name: "Proximity Mines" },
+  { code: "{11:57}", name: "Digital Backup Turret" }
+];
+
+// Synergies - Legendary Gear Combos for Builder Mode
+const SYNERGIES = [
+  {
+    id: 1,
+    name: "Atlas Homing Singularity Barrage",
+    description: "Pull enemies with Singularity, tag center with Damage Marker, fire Smart Tracking. Whistler ensures 100% hits on marked target. Massive damage spreads to cluster, instant wipe triggers Bilateral for full sustain.",
+    licensed: { manufacturer: "atlas", value: "tracker" },
+    prisms: ["Singularity", "Damage Marker"],
+    perks: ["Whistler", "Bilateral"]
+  },
+  {
+    id: 2,
+    name: "Tediore Recursive Defense System",
+    description: "Empty magazine deploys Husky turret with massive Pitcher damage bonus. Scarce grants invisibility during deployment. Micro-Rockets provide burst damage between reloads. Automated defense with stealth repositioning.",
+    licensed: { manufacturer: "tediore", value: "thrown" },
+    prisms: ["Micro-Rockets"],
+    perks: ["Husky Auto Turret", "Pitcher", "Scarce"]
+  },
+  {
+    id: 3,
+    name: "COV Overheating Damage Cascade",
+    description: "Fire continuously to activate Heat Crits + Blazing Barrel bonuses. Corrosive Vial primes armored enemies. Continuous damage via Fixer-Upper converts to shield repair. Energy Burst clears trash during high heat.",
+    licensed: { manufacturer: "cov", value: "ducttape" },
+    prisms: ["Corrosive Vial", "Energy Burst"],
+    perks: ["Blazing Barrel", "Fixer-Upper"]
+  },
+  {
+    id: 4,
+    name: "Jakobs Infinite Crit/Explosion Chain",
+    description: "Harpoon enemy for guaranteed crits. Ricochet triggers Trample explosions. Stalker refunds ammo, creating infinite chain of critical, explosive, ricocheting, and tethering damage.",
+    licensed: { manufacturer: "jakobs", value: "ricochet" },
+    prisms: ["Gravity Harpoon"],
+    perks: ["Trample", "Stalker", "Propagation"]
+  },
+  {
+    id: 5,
+    name: "Hyperion Amped Defense Cannon",
+    description: "Deploy Gun Shield, stand still to charge Amper Camper. Incoming damage absorbed by Force Field maintains Hivemind full-shield Amp bonus. Railgun Shot receives triple damage boost (Force Field + Amper Camper + Hivemind).",
+    licensed: { manufacturer: "hyperion", value: "shield" },
+    prisms: ["Railgun Shot"],
+    perks: ["Amper Camper", "Hivemind", "Defense Protocol"]
+  },
+  {
+    id: 6,
+    name: "Elemental Triad Lockdown",
+    description: "Shock Field breaks shields, apply Cryo + Rad + Shock for status lockdown. Duct Tape + Superheated plasma maintain fire. Slow Burn adds massive stacking Fire DoT. Simultaneous lock, shield prevention, and devastating multi-element DoT.",
+    licensed: { manufacturer: "cov", value: "ducttape" },
+    prisms: ["Shock Field"],
+    perks: ["Cryo + Rad + Shock", "Superheated", "Slow Burn"]
+  },
+  {
+    id: 7,
+    name: "Torgue Overkill Chain",
+    description: "Cover target with Stickies. Fire Rocket Burst/Grenade Spread to saturate area. Reload triggers massive Kaoson detonation bonus, instant wipe. Follow with 621.0 Micro-Rockets to lock onto stragglers.",
+    licensed: { manufacturer: "torgue", value: "stickies" },
+    prisms: ["Rocket Burst", "Grenade Spread"],
+    perks: ["Granted", "Micro-Rockets"]
+  },
+  {
+    id: 8,
+    name: "Recursive Ghost Reload",
+    description: "Fire charged Railgun Shot. Reload triggers Thrown projectile + Proprioception ghost shot, hitting enemy 3 times. Swap to paired weapon for instant reload via Pair of Thieves. Strike Twice adds delayed lightning. Rapid cycle repeats.",
+    licensed: { manufacturer: "tediore", value: "thrown" },
+    prisms: ["Railgun Shot"],
+    perks: ["Proprioception", "Strike Twice", "Pair of Thieves"]
+  },
+  {
+    id: 9,
+    name: "Melee Execution Nova",
+    description: "Shock Field weakens shields. Dash for Melee kill triggering Goremaster explosion + Midday Fire Nova, clearing area. Knife Projectile or Force Bunt knockback executes survivors.",
+    licensed: { manufacturer: "jakobs", value: "ricochet" },
+    prisms: ["Knife Projectile", "Shock Field"],
+    perks: ["Chief Execution Officer", "Force Bunt", "Midday"]
+  },
+  {
+    id: 10,
+    name: "Elemental Cycling Chaos",
+    description: "Duct Tape maintains Chain Beam on multiple enemies triggering Energy Transfer chain. Elemental damage + Chain triggers Colorful Mess, cycling all elements. Creates screen-wide multi-layered elemental DoT. Burning Desire ensures Fire DoT stacks infinitely.",
+    licensed: { manufacturer: "cov", value: "ducttape" },
+    prisms: ["Chain Beam"],
+    perks: ["Energy Transfer", "Colorful Mess", "Burning Desire"]
+  }
+];
+
+// Dynamically generate prism and perk checkboxes
+function initializePrismsAndPerks() {
+  const prismsGrid = document.getElementById('prismsGrid');
+  const perksGrid = document.getElementById('perksGrid');
+  
+  // Generate prisms
+  PRISM_POOL.forEach((prism, idx) => {
+    const label = document.createElement('label');
+    label.className = 'licensed-item';
+    label.innerHTML = `
+      <input type="checkbox" data-prism="${idx}">
+      <div>
+        <div class="part-name" style="color:#a855f7">${prism.name}</div>
+      </div>
+    `;
+    prismsGrid.appendChild(label);
+  });
+  
+  // Generate perks
+  LEGENDARY_PERKS.forEach((perk, idx) => {
+    const label = document.createElement('label');
+    label.className = 'licensed-item';
+    label.innerHTML = `
+      <input type="checkbox" data-perk="${idx}">
+      <div>
+        <div class="part-name" style="color:#fbbf24">${perk.name}</div>
+        <div class="part-effect">${perk.weapon}</div>
+      </div>
+    `;
+    perksGrid.appendChild(label);
+  });
+}
+
+// Call on load
+initializePrismsAndPerks();
+
+// Initialize Synergies Grid
+function initializeSynergies() {
+  const synergyGrid = document.getElementById('synergyGrid');
+  
+  SYNERGIES.forEach(synergy => {
+    const card = document.createElement('div');
+    card.className = 'synergy-card';
+    card.setAttribute('data-synergy-id', synergy.id);
+    card.onclick = () => applySynergy(synergy);
+    
+    // Build parts display
+    const partsDisplay = `
+      <strong style="color: var(--accent-soft);">Licensed:</strong> ${synergy.licensed.manufacturer.charAt(0).toUpperCase() + synergy.licensed.manufacturer.slice(1)}<br>
+      <strong style="color: var(--purple);">Prisms:</strong> ${synergy.prisms.join(', ')}<br>
+      <strong style="color: var(--good);">Perks:</strong> ${synergy.perks.join(', ')}
+    `;
+    
+    card.innerHTML = `
+      <div class="synergy-card-title">${synergy.id}. ${synergy.name}</div>
+      <div class="synergy-card-parts">${partsDisplay}</div>
+      <div class="synergy-card-desc">${synergy.description}</div>
+    `;
+    
+    synergyGrid.appendChild(card);
+  });
+}
+
+// Apply Synergy - Auto-check all parts for the selected synergy
+function applySynergy(synergy) {
+  // Clear all current part selections first
+  document.querySelectorAll('#licensedPartsGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('#prismsGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('#perksGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  
+  // Check Licensed Part
+  const licensedCb = document.querySelector(`#licensedPartsGrid input[data-licensed="${synergy.licensed.manufacturer}"][value="${synergy.licensed.value}"]`);
+  if (licensedCb) licensedCb.checked = true;
+  
+  // Check Prisms (find by name matching)
+  synergy.prisms.forEach(prismName => {
+    const prismIdx = PRISM_POOL.findIndex(p => p.name === prismName);
+    if (prismIdx !== -1) {
+      const prismCb = document.querySelector(`#prismsGrid input[data-prism="${prismIdx}"]`);
+      if (prismCb) prismCb.checked = true;
+    }
+  });
+  
+  // Check Legendary Perks (find by name matching)
+  synergy.perks.forEach(perkName => {
+    const perkIdx = LEGENDARY_PERKS.findIndex(p => p.name === perkName);
+    if (perkIdx !== -1) {
+      const perkCb = document.querySelector(`#perksGrid input[data-perk="${perkIdx}"]`);
+      if (perkCb) perkCb.checked = true;
+    }
+  });
+  
+  // Highlight the active synergy card
+  document.querySelectorAll('.synergy-card').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.synergy-card[data-synergy-id="${synergy.id}"]`).classList.add('active');
+  
+  // Show toast notification
+  showToast(`✨ Applied: ${synergy.name}`);
+}
+
+// Call on load
+initializeSynergies();
+
+// --- SAVED BUILDS SYSTEM ---
+const SAVED_BUILDS_KEY = 'bl4_saved_builds';
+const MAX_BUILDS = 50;
+
+// Load builds from localStorage
+function loadSavedBuilds() {
+  try {
+    const builds = localStorage.getItem(SAVED_BUILDS_KEY);
+    return builds ? JSON.parse(builds) : [];
+  } catch (e) {
+    console.error('Error loading builds:', e);
+    return [];
+  }
+}
+
+// Save builds to localStorage
+function saveBuildsList(builds) {
+  try {
+    localStorage.setItem(SAVED_BUILDS_KEY, JSON.stringify(builds));
+    return true;
+  } catch (e) {
+    console.error('Error saving builds:', e);
+    showToast('⚠️ Error saving builds');
+    return false;
+  }
+}
+
+// Toggle saved builds section
+function toggleSavedBuilds() {
+  const container = document.getElementById("savedBuildsContainer");
+  const icon = document.getElementById("savedBuildsToggleIcon");
+  
+  if (container.style.display === "none") {
+    container.style.display = "block";
+    icon.textContent = "▲ Click to collapse";
+    renderBuilds();
+  } else {
+    container.style.display = "none";
+    icon.textContent = "▼ Click to expand";
+  }
+}
+
+// Render builds list
+function renderBuilds() {
+  const builds = loadSavedBuilds();
+  const grid = document.getElementById("buildsGrid");
+  
+  if (builds.length === 0) {
+    grid.innerHTML = '<div class="builds-empty">No saved builds yet. Create one by clicking "💾 Save Current"!</div>';
+    return;
+  }
+  
+  grid.innerHTML = builds.map(build => `
+    <div class="build-card" data-build-id="${build.id}" onclick="event.target.tagName !== 'INPUT' && loadBuild(${build.id})">
+      <input type="checkbox" class="build-card-checkbox" data-build-id="${build.id}" onclick="event.stopPropagation(); toggleBuildSelection(${build.id})">
+      <div class="build-card-content">
+        <div class="build-card-name">${escapeHtml(build.name)}</div>
+        <div class="build-card-weapon">📦 ${build.baseWeapon.manufacturer} ${build.baseWeapon.type} (Level ${build.baseWeapon.level})</div>
+        <div class="build-card-parts">
+          ${build.modifications.element ? `🔥 ${build.modifications.element.charAt(0).toUpperCase() + build.modifications.element.slice(1)}` : ''}
+          ${build.modifications.licensedParts.length > 0 ? ` • ⚙️ ${build.modifications.licensedParts.length} Licensed` : ''}
+          ${build.modifications.prisms.length > 0 ? ` • 💎 ${build.modifications.prisms.length} Prisms` : ''}
+          ${build.modifications.perks.length > 0 ? ` • ⭐ ${build.modifications.perks.length} Perks` : ''}
+        </div>
+        <div class="build-card-time">${new Date(build.timestamp).toLocaleString()}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Save current build
+function saveCurrentBuild() {
+  // Get current weapon source
+  const stockSel = document.getElementById("weaponSourceStock").value;
+  const pasteSel = document.getElementById("weaponSourcePaste").value.trim();
+  
+  if (!stockSel && !pasteSel) {
+    showToast('⚠️ Please select a base weapon first');
+    return;
+  }
+  
+  // Prompt for name
+  const name = prompt('Enter a name for this build:', 'My Awesome Build');
+  if (!name) return;
+  
+  // Get current state
+  const builds = loadSavedBuilds();
+  
+  if (builds.length >= MAX_BUILDS) {
+    showToast(`⚠️ Maximum ${MAX_BUILDS} builds reached. Delete some first.`);
+    return;
+  }
+  
+  // Collect current modifications
+  const licensedParts = [];
+  document.querySelectorAll('#licensedPartsGrid input:checked').forEach(cb => {
+    licensedParts.push(`${cb.dataset.licensed}-${cb.value}`);
+  });
+  
+  const prisms = [];
+  document.querySelectorAll('#prismsGrid input:checked').forEach(cb => {
+    prisms.push(parseInt(cb.dataset.prism));
+  });
+  
+  const perks = [];
+  document.querySelectorAll('#perksGrid input:checked').forEach(cb => {
+    perks.push(parseInt(cb.dataset.perk));
+  });
+  
+  // Get base weapon info
+  let baseSerial, baseInfo;
+  if (pasteSel) {
+    baseSerial = pasteSel;
+    baseInfo = builderState.baseWeapon || { manufacturer: 'Unknown', type: 'Weapon', level: 50 };
+  } else {
+    const [t, m] = stockSel.split("|");
+    baseSerial = baseItems[t][m];
+    baseInfo = { manufacturer: m, type: t, level: 50 };
+  }
+  
+  // Create build object
+  const build = {
+    id: Date.now(),
+    name: name,
+    timestamp: Date.now(),
+    baseWeapon: {
+      serial: baseSerial,
+      manufacturer: baseInfo.manufacturer,
+      type: baseInfo.type,
+      level: baseInfo.level
+    },
+    modifications: {
+      element: selectedElement,
+      licensedParts: licensedParts,
+      prisms: prisms,
+      perks: perks
+    }
+  };
+  
+  builds.push(build);
+  
+  if (saveBuildsList(builds)) {
+    showToast(`✅ Build "${name}" saved!`);
+    renderBuilds();
+  }
+}
+
+// Load build
+function loadBuild(buildId) {
+  const builds = loadSavedBuilds();
+  const build = builds.find(b => b.id === buildId);
+  
+  if (!build) {
+    showToast('⚠️ Build not found');
+    return;
+  }
+  
+  // Clear current selections
+  document.querySelectorAll('#licensedPartsGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('#prismsGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('#perksGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.element-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // Load base weapon
+  document.getElementById("weaponSourcePaste").value = build.baseWeapon.serial;
+  document.getElementById("weaponSourceStock").value = "";
+  handleWeaponSourceChange();
+  
+  // Apply element
+  if (build.modifications.element) {
+    selectedElement = build.modifications.element;
+    document.querySelector(`.element-btn[data-element="${build.modifications.element}"]`)?.classList.add('active');
+  } else {
+    selectedElement = null;
+  }
+  
+  // Apply licensed parts
+  build.modifications.licensedParts.forEach(part => {
+    const [manufacturer, value] = part.split('-');
+    const cb = document.querySelector(`#licensedPartsGrid input[data-licensed="${manufacturer}"][value="${value}"]`);
+    if (cb) cb.checked = true;
+  });
+  
+  // Apply prisms
+  build.modifications.prisms.forEach(idx => {
+    const cb = document.querySelector(`#prismsGrid input[data-prism="${idx}"]`);
+    if (cb) cb.checked = true;
+  });
+  
+  // Apply perks
+  build.modifications.perks.forEach(idx => {
+    const cb = document.querySelector(`#perksGrid input[data-perk="${idx}"]`);
+    if (cb) cb.checked = true;
+  });
+  
+  showToast(`✅ Loaded: ${build.name}`);
+}
+
+// Toggle build selection
+function toggleBuildSelection(buildId) {
+  const card = document.querySelector(`.build-card[data-build-id="${buildId}"]`);
+  const checkbox = document.querySelector(`.build-card-checkbox[data-build-id="${buildId}"]`);
+  if (checkbox.checked) {
+    card.classList.add('selected');
+  } else {
+    card.classList.remove('selected');
+  }
+}
+
+// Get selected build IDs
+function getSelectedBuildIds() {
+  const selected = [];
+  document.querySelectorAll('.build-card-checkbox:checked').forEach(cb => {
+    selected.push(parseInt(cb.dataset.buildId));
+  });
+  return selected;
+}
+
+// Export selected builds
+function exportSelected(format) {
+  const selectedIds = getSelectedBuildIds();
+  
+  if (selectedIds.length === 0) {
+    showToast('⚠️ Please select builds to export');
+    return;
+  }
+  
+  const builds = loadSavedBuilds();
+  const selectedBuilds = builds.filter(b => selectedIds.includes(b.id));
+  
+  if (format === 'json') {
+    exportAsJSON(selectedBuilds);
+  } else if (format === 'html') {
+    exportAsHTML(selectedBuilds);
+  }
+}
+
+// Export as JSON
+function exportAsJSON(builds) {
+  const dataStr = JSON.stringify(builds, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `bl4_builds_${Date.now()}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+  showToast(`✅ Exported ${builds.length} build(s) as JSON`);
+}
+
+// Export as HTML - Beautiful standalone page
+function exportAsHTML(builds) {
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Borderlands 4 Builds - THE HARD DRIVE V5</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #050816, #0f172a, #1e1b4b);
+      color: #f1f5f9;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(168, 85, 247, 0.1));
+      border-radius: 20px;
+      border: 2px solid rgba(251, 146, 60, 0.5);
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #fff, #fb923c, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
+    }
+    .header p { color: #94a3b8; font-size: 1rem; }
+    .build {
+      background: rgba(15, 23, 42, 0.95);
+      border: 2px solid rgba(74, 222, 128, 0.5);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(74, 222, 128, 0.2);
+    }
+    .build-name {
+      font-size: 1.5rem;
+      color: #4ade80;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .build-weapon {
+      font-size: 1.1rem;
+      color: #fb923c;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(249, 115, 22, 0.1);
+      border-radius: 8px;
+    }
+    .build-section {
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #a855f7;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .parts-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .part-tag {
+      padding: 6px 12px;
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: #e9d5ff;
+    }
+    .serial-box {
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #4ade80;
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      color: #bbf7d0;
+      word-break: break-all;
+      user-select: all;
+      margin-top: 12px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎮 THE HARD DRIVE V5</h1>
+      <p>Borderlands 4 Weapon Builds</p>
+    </div>
+    ${builds.map(build => `
+      <div class="build">
+        <div class="build-name">${escapeHtml(build.name)}</div>
+        <div class="build-weapon">
+          📦 ${build.baseWeapon.manufacturer.toUpperCase()} ${build.baseWeapon.type.toUpperCase()} (Level ${build.baseWeapon.level})
+        </div>
+        
+        ${build.modifications.element ? `
+        <div class="build-section">
+          <div class="section-title">🔥 Element</div>
+          <div class="parts-list">
+            <div class="part-tag">${build.modifications.element.charAt(0).toUpperCase() + build.modifications.element.slice(1)}</div>
+          </div>
+        </div>
+        ` : ''}
+        
+        ${build.modifications.licensedParts.length > 0 ? `
+        <div class="build-section">
+          <div class="section-title">⚙️ Licensed Parts</div>
+          <div class="parts-list">
+            ${build.modifications.licensedParts.map(part => `<div class="part-tag">${part}</div>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+        
+        ${build.modifications.prisms.length > 0 ? `
+        <div class="build-section">
+          <div class="section-title">💎 Prisms</div>
+          <div class="parts-list">
+            ${build.modifications.prisms.map(idx => `<div class="part-tag">${PRISM_POOL[idx]?.name || 'Unknown'}</div>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+        
+        ${build.modifications.perks.length > 0 ? `
+        <div class="build-section">
+          <div class="section-title">⭐ Legendary Perks</div>
+          <div class="parts-list">
+            ${build.modifications.perks.map(idx => `<div class="part-tag">${LEGENDARY_PERKS[idx]?.name || 'Unknown'}</div>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+        
+        <div class="build-section">
+          <div class="section-title">📋 Weapon Serial</div>
+          <div class="serial-box">${build.baseWeapon.serial}</div>
+        </div>
+      </div>
+    `).join('')}
+    
+    <div class="footer">
+      Generated by THE HARD DRIVE V5 • ${new Date().toLocaleString()}
+    </div>
+  </div>
+</body>
+</html>`;
+  
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `bl4_builds_${Date.now()}.html`;
+  link.click();
+  URL.revokeObjectURL(url);
+  showToast(`✅ Exported ${builds.length} build(s) as HTML`);
+}
+
+// Import builds
+function importBuilds() {
+  document.getElementById('importBuildsFile').click();
+}
+
+function handleImportFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const importedBuilds = JSON.parse(e.target.result);
+      
+      if (!Array.isArray(importedBuilds)) {
+        throw new Error('Invalid format');
+      }
+      
+      const currentBuilds = loadSavedBuilds();
+      const newBuilds = [...currentBuilds];
+      
+      let imported = 0;
+      importedBuilds.forEach(build => {
+        if (newBuilds.length < MAX_BUILDS) {
+          build.id = Date.now() + imported; // New ID to avoid conflicts
+          build.timestamp = Date.now();
+          newBuilds.push(build);
+          imported++;
+        }
+      });
+      
+      if (saveBuildsList(newBuilds)) {
+        showToast(`✅ Imported ${imported} build(s)`);
+        renderBuilds();
+      }
+    } catch (e) {
+      showToast('⚠️ Invalid file format');
+      console.error('Import error:', e);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // Reset file input
+}
+
+// Delete selected builds
+function deleteSelected() {
+  const selectedIds = getSelectedBuildIds();
+  
+  if (selectedIds.length === 0) {
+    showToast('⚠️ Please select builds to delete');
+    return;
+  }
+  
+  if (!confirm(`Delete ${selectedIds.length} build(s)? This cannot be undone.`)) {
+    return;
+  }
+  
+  const builds = loadSavedBuilds();
+  const filtered = builds.filter(b => !selectedIds.includes(b.id));
+  
+  if (saveBuildsList(filtered)) {
+    showToast(`✅ Deleted ${selectedIds.length} build(s)`);
+    renderBuilds();
+  }
+}
+
+// Helper: Escape HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// --- API HELPERS ---
+async function deserializeSerialHelper(serial) {
+  const s = serial.startsWith("@") ? serial : "@" + serial;
+  try {
+    const res = await fetch(`${API_BASE_URL}/deserialize`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ serial_b85: s })
+    });
+    if(res.ok) return await res.json();
+    throw new Error("API Error");
+  } catch(e) {
+    const res = await fetch(API_FALLBACK_URL, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ serial_b85: s })
+    });
+    if(res.ok) return await res.json();
+    throw new Error("Deserialization failed");
+  }
+}
+
+async function serializeDeserialized(deserialized) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/reserialize`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ deserialized: deserialized })
+    });
+    if(res.ok) { const j = await res.json(); return j.serial_b85; }
+  } catch(e) {}
+
+  const res = await fetch(API_FALLBACK_URL, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ deserialized: deserialized })
+  });
+  if(res.ok) { const j = await res.json(); return j.serial_b85; }
+  throw new Error("Serialization failed");
+}
+
+// --- UTILS ---
+function normalizeDeserialized(s) {
+  s = String(s).trim();
+  return s.endsWith("|") ? s : s + "|";
+}
+
+function ensureLevel(deserialized) {
+  // Use the new parsing approach for consistency
+  const extracted = extractParts(deserialized);
+  if (!extracted) return deserialized;
+  
+  extracted.level = String(selectedLevel);
+  return rebuildDeserialized(extracted);
+}
+
+function parseWeaponInfo(deserialized) {
+  const parsed = parseDeserialized(deserialized);
+  
+  if (!parsed) {
+    return {
+      type: "Unknown",
+      manufacturer: "Unknown",
+      level: "1",
+      element: "Kinetic",
+      typeId: 0
+    };
+  }
+  
+  const typeId = parseInt(parsed.typeId);
+  const weaponData = WEAPON_TYPE_MAP[typeId] || { type: "Unknown", manufacturer: "Unknown" };
+  
+  // Find element from parts
+  let element = "Kinetic";
+  const parts = parsed.parts || [];
+  for (const p of parts) {
+    if (p === "{1:12}") { element = "Fire"; break; }
+    else if (p === "{1:11}") { element = "Cryo"; break; }
+    else if (p === "{1:10}") { element = "Corrosive"; break; }
+    else if (p === "{1:14}") { element = "Shock"; break; }
+    else if (p === "{1:13}") { element = "Radiation"; break; }
+  }
+  
+  return {
+    type: weaponData.type,
+    manufacturer: weaponData.manufacturer,
+    level: parsed.level,
+    element: element,
+    typeId: typeId
+  };
+}
+
+// ============================================================
+// DESERIALIZED FORMAT FUNCTIONS - Matching Editor Format Exactly
+// Format: {typeId}, 0, 1, {level}| 2, {seed}|| {parts}|
+// ============================================================
+
+/**
+ * Parse a deserialized string into structured components.
+ * Handles the exact format: typeId, 0, 1, level| 2, seed|| parts|
+ */
+function parseDeserialized(deserialized) {
+  const s = normalizeDeserialized(deserialized);
+  
+  // Split by || to separate header from parts
+  const doublePipeIndex = s.indexOf("||");
+  if (doublePipeIndex === -1) {
+    console.error("Invalid deserialized format - no || found:", s);
+    return null;
+  }
+  
+  const headerSection = s.substring(0, doublePipeIndex);
+  const partsSection = s.substring(doublePipeIndex + 2); // Skip "||"
+  
+  // Parse header: "typeId, 0, 1, level| 2, seed" or "typeId, 0, 1, level| 9, 1| 2, seed"
+  // First segment before | is the main header
+  const headerParts = headerSection.split("|");
+  const mainHeader = headerParts[0].split(",").map(p => p.trim());
+  
+  const typeId = mainHeader[0] || "0";
+  const padding = mainHeader[1] || "0";
+  const constant = mainHeader[2] || "1";
+  const level = mainHeader[3] || "50";
+  
+  // Find seed - it's in a section that starts with "2,"
+  let seed = "0";
+  let firmwareLock = false;
+  for (let i = 1; i < headerParts.length; i++) {
+    const section = headerParts[i].trim();
+    if (section.startsWith("2,")) {
+      seed = section.substring(2).trim();
+    } else if (section.startsWith("9,")) {
+      firmwareLock = true;
+    }
+  }
+  
+  // Parse parts - match all {xxx} patterns
+  const partMatches = partsSection.match(/\{[^}]+\}/g) || [];
+  
+  return {
+    typeId,
+    padding,
+    constant,
+    level,
+    seed,
+    firmwareLock,
+    parts: partMatches
+  };
+}
+
+/**
+ * Build a deserialized string from structured components.
+ * Outputs exact format: typeId, 0, 1, level| 2, seed|| parts|
+ */
+function buildDeserialized(data) {
+  const { typeId, level, seed, firmwareLock, parts } = data;
+  
+  // Build header
+  let code = `${typeId}, 0, 1, ${level}|`;
+  
+  // Add firmware lock section if enabled (comes before seed)
+  if (firmwareLock) {
+    code += ` 9, 1|`;
+  }
+  
+  // Add seed section
+  code += ` 2, ${seed || 0}||`;
+  
+  // Add parts with proper spacing
+  if (parts && parts.length > 0) {
+    code += ` ${parts.join(" ")}`;
+  }
+  
+  code += `|`;
+  
+  return code;
+}
+
+/**
+ * Extract parts with proper structure for manipulation.
+ * Returns: { header components, rarity, otherParts, element }
+ */
+function extractParts(deserialized) {
+  const parsed = parseDeserialized(deserialized);
+  
+  if (!parsed || !parsed.parts || parsed.parts.length === 0) {
+    return { 
+      typeId: parsed?.typeId || "0",
+      level: parsed?.level || "50",
+      seed: parsed?.seed || "0",
+      firmwareLock: parsed?.firmwareLock || false,
+      rarity: null, 
+      parts: [], 
+      element: null 
+    };
+  }
+  
+  // First part is ALWAYS rarity
+  const rarity = parsed.parts[0];
+  
+  // Find element (if present) - format {1:10} through {1:14}
+  const elementIndex = parsed.parts.findIndex(p => /^\{1:1[0-4]\}$/.test(p));
+  const element = elementIndex >= 0 ? parsed.parts[elementIndex] : null;
+  
+  // Other parts (excluding rarity at index 0, and element)
+  const otherParts = parsed.parts.slice(1).filter((p, i) => {
+    // elementIndex is from original array, we need to check if current part is element
+    return !(/^\{1:1[0-4]\}$/.test(p));
+  });
+  
+  return { 
+    typeId: parsed.typeId,
+    level: parsed.level,
+    seed: parsed.seed,
+    firmwareLock: parsed.firmwareLock,
+    rarity, 
+    parts: otherParts, 
+    element 
+  };
+}
+
+/**
+ * Rebuild deserialized string from extracted parts.
+ * Order: rarity FIRST, then other parts, then element at END
+ */
+function rebuildDeserialized(extracted) {
+  const { typeId, level, seed, firmwareLock, rarity, parts, element } = extracted;
+  
+  // Build parts array in correct order
+  let allParts = [];
+  if (rarity) allParts.push(rarity);
+  allParts.push(...parts);
+  if (element) allParts.push(element);
+  
+  return buildDeserialized({
+    typeId,
+    level,
+    seed,
+    firmwareLock,
+    parts: allParts
+  });
+}
+
+/**
+ * Inject an element into a deserialized string (replaces existing element).
+ */
+function injectElement(deserialized, elementCode) {
+  if (!deserialized || !elementCode) return deserialized;
+  
+  const extracted = extractParts(deserialized);
+  extracted.element = elementCode; // Replace or add element
+  
+  return rebuildDeserialized(extracted);
+}
+
+/**
+ * Inject a part into a deserialized string (adds to parts list).
+ */
+function injectPart(deserialized, partCode) {
+  if (!deserialized || !partCode) return deserialized;
+  
+  const extracted = extractParts(deserialized);
+  extracted.parts.push(partCode);
+  
+  return rebuildDeserialized(extracted);
+}
+
+function getPartName(code) {
+  return PART_NAMES[code] || code;
+}
+
+function setLevel(level) {
+  selectedLevel = level;
+  document.querySelectorAll(".level-btn").forEach(b => 
+    b.classList.toggle("active", parseInt(b.dataset.level) === level)
+  );
+}
+
+function toggleInfoModal() {
+  const modal = document.getElementById("infoModal");
+  modal.classList.toggle("show");
+}
+
+function formatDeserializedForDisplay(deserialized) {
+  if (!deserialized) return deserialized;
+  
+  // Split into sections
+  const sections = deserialized.split("|");
+  
+  if (sections.length === 0) return deserialized;
+  
+  // Format header section (ensure spaces after commas)
+  sections[0] = sections[0].split(",").map(p => p.trim()).join(", ");
+  
+  // Rejoin all sections
+  return sections.join("|");
+}
+
+function switchSerialTab(tab) {
+  const out = document.getElementById("outputSerial");
+  const tabs = document.querySelectorAll(".serial-tab");
+  
+  // Update active tab styling FIRST (always works)
+  tabs.forEach(t => {
+    if (t.dataset.tab === tab) {
+      t.classList.add("active");
+    } else {
+      t.classList.remove("active");
+    }
+  });
+  
+  // Only switch content if we have data
+  if (!currentSerial || !currentDeserialized) return;
+  
+  // Switch content
+  if (tab === 'base85') {
+    out.textContent = formatDeserializedForDisplay(currentDeserialized);
+  } else {
+    out.textContent = currentSerial;
+  }
+}
+
+// --- APOCALYPSE LOGIC ---
+function applyApocalypseChaos(deserialized) {
+  let upgrades = [];
+  let prisms = [];
+  let perks = [];
+  let licensed = [];
+  
+  let d = ensureLevel(deserialized);
+
+  if (selectedElement && ELEMENT_CODES[selectedElement]) {
+    d = injectElement(d, ELEMENT_CODES[selectedElement]);
+    upgrades.push("Element Override: " + selectedElement.toUpperCase());
+  }
+
+  // Apply user-selected prisms
+  document.querySelectorAll('#prismsGrid input:checked').forEach(cb => {
+    const idx = parseInt(cb.dataset.prism);
+    if (PRISM_POOL[idx]) {
+      d = injectPart(d, PRISM_POOL[idx].code);
+      prisms.push(PRISM_POOL[idx].name);
+    }
+  });
+
+  // Apply user-selected perks
+  document.querySelectorAll('#perksGrid input:checked').forEach(cb => {
+    const idx = parseInt(cb.dataset.perk);
+    if (LEGENDARY_PERKS[idx]) {
+      d = injectPart(d, LEGENDARY_PERKS[idx].code);
+      perks.push(LEGENDARY_PERKS[idx].name);
+    }
+  });
+
+  // MASTER UNLOCK: Add MORE random prisms from all weapon types
+  for(let i=0; i<8; i++) {
+    const p = PRISM_POOL[Math.floor(Math.random() * PRISM_POOL.length)];
+    d = injectPart(d, p.code);
+    prisms.push(p.name);
+  }
+
+  // MASTER UNLOCK: Add MORE random legendary perks
+  for(let i=0; i<25; i++) {
+    const p = LEGENDARY_PERKS[Math.floor(Math.random() * LEGENDARY_PERKS.length)];
+    d = injectPart(d, p.code);
+    perks.push(p.name);
+  }
+
+  return { deserialized: d, upgrades, prisms, perks, licensed };
+}
+
+// --- RANDOM CHAOS LOGIC ---
+function applyRandomChaosLogic(deserialized) {
+  let upgrades = [];
+  let prisms = [];
+  let perks = [];
+  let licensed = [];
+  
+  let d = ensureLevel(deserialized);
+
+  if (selectedElement && ELEMENT_CODES[selectedElement]) {
+    d = injectElement(d, ELEMENT_CODES[selectedElement]);
+    upgrades.push("Element Override: " + selectedElement.toUpperCase());
+  }
+
+  // Apply user-selected prisms
+  document.querySelectorAll('#prismsGrid input:checked').forEach(cb => {
+    const idx = parseInt(cb.dataset.prism);
+    if (PRISM_POOL[idx]) {
+      d = injectPart(d, PRISM_POOL[idx].code);
+      prisms.push(PRISM_POOL[idx].name);
+    }
+  });
+
+  // Apply user-selected perks
+  document.querySelectorAll('#perksGrid input:checked').forEach(cb => {
+    const idx = parseInt(cb.dataset.perk);
+    if (LEGENDARY_PERKS[idx]) {
+      d = injectPart(d, LEGENDARY_PERKS[idx].code);
+      perks.push(LEGENDARY_PERKS[idx].name);
+    }
+  });
+
+  // MASTER UNLOCK: Add MORE random prisms from all weapon types
+  for(let i=0; i<12; i++) {
+    const p = PRISM_POOL[Math.floor(Math.random() * PRISM_POOL.length)];
+    d = injectPart(d, p.code);
+    prisms.push(p.name);
+  }
+
+  // MASTER UNLOCK: Add MORE random legendary perks
+  for(let i=0; i<35; i++) {
+    const p = LEGENDARY_PERKS[Math.floor(Math.random() * LEGENDARY_PERKS.length)];
+    d = injectPart(d, p.code);
+    perks.push(p.name);
+  }
+
+  return { deserialized: d, upgrades, prisms, perks, licensed };
+}
+
+// --- BUILDER LOGIC ---
+function applyBuilderLogic(deserialized) {
+  let upgrades = [];
+  let prisms = [];
+  let perks = [];
+  let licensed = [];
+  
+  // Start with the base weapon (already at correct level from base)
+  let d = deserialized;
+  
+  // ONLY apply user selections - no auto-optimization
+  
+  // Apply selected element override (if any)
+  if (selectedElement && ELEMENT_CODES[selectedElement]) {
+    d = injectElement(d, ELEMENT_CODES[selectedElement]);
+    upgrades.push("Element: " + selectedElement.toUpperCase());
+  }
+
+  // Add user-selected Prisms
+  document.querySelectorAll('#prismsGrid input:checked').forEach(cb => {
+    const idx = parseInt(cb.dataset.prism);
+    if (PRISM_POOL[idx]) {
+      d = injectPart(d, PRISM_POOL[idx].code);
+      prisms.push(PRISM_POOL[idx].name);
+    }
+  });
+
+  // Add user-selected Perks
+  document.querySelectorAll('#perksGrid input:checked').forEach(cb => {
+    const idx = parseInt(cb.dataset.perk);
+    if (LEGENDARY_PERKS[idx]) {
+      d = injectPart(d, LEGENDARY_PERKS[idx].code);
+      perks.push(LEGENDARY_PERKS[idx].name);
+    }
+  });
+
+  return { deserialized: d, upgrades, prisms, perks, licensed };
+}
+
+// --- MAIN FUNCTIONS ---
+async function doApocalypseRoll() {
+  await executeRoll(applyApocalypseChaos);
+}
+
+async function doRandomChaosRoll() {
+  await executeRoll(applyRandomChaosLogic);
+}
+
+async function doBuilderBuild() {
+  // Check if base weapon is loaded
+  if (!builderState.baseWeapon || !builderState.baseDeserialized) {
+    const msg = document.getElementById("message");
+    msg.className = "message error show";
+    msg.textContent = "⚠️ Please load a base weapon first (Stock or Paste)";
+    setTimeout(() => {
+      msg.className = "message";
+    }, 4000);
+    return;
+  }
+  
+  // Execute build using the base weapon
+  await executeBuilderRoll();
+}
+
+// --- SHARED EXECUTION ---
+async function executeRoll(logicFn) {
+  const out = document.getElementById("outputSerial");
+  const msg = document.getElementById("message");
+  const weaponDetails = document.getElementById("weaponDetails");
+
+  out.textContent = "Processing...";
+  out.classList.add("empty");
+  msg.style.display = 'none';
+  weaponDetails.style.display = 'none';
+  
+  // Reset to serial tab
+  document.querySelectorAll(".serial-tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.tab === "serial");
+  });
+
+  try {
+    let sourceSerial = "";
+    
+    // Check unified inputs - paste takes priority over stock selection
+    const pasteInput = document.getElementById("weaponSourcePaste").value.trim();
+    const stockInput = document.getElementById("weaponSourceStock").value;
+    
+    if (pasteInput) {
+      // Use pasted serial
+      sourceSerial = pasteInput;
+    } else if (stockInput && stockInput.includes("|")) {
+      // Use stock weapon
+      const [t, m] = stockInput.split("|");
+      sourceSerial = baseItems[t][m];
+    } else {
+      throw new Error("Please select a stock weapon or paste a serial!");
+    }
+
+    const res1 = await deserializeSerialHelper(sourceSerial);
+    if (!res1 || !res1.deserialized) throw new Error("Invalid Serial");
+
+    const { deserialized: finalStr, upgrades, prisms, perks, licensed } = logicFn(res1.deserialized);
+
+    const weaponInfo = parseWeaponInfo(finalStr);
+    const partsData = extractParts(finalStr);
+    const allPartsCount = (partsData.rarity ? 1 : 0) + partsData.parts.length + (partsData.element ? 1 : 0);
+
+    const finalSerial = await serializeDeserialized(finalStr);
+
+    currentSerial = finalSerial;
+    currentDeserialized = finalStr;
+
+    out.textContent = finalSerial;
+    out.classList.remove("empty");
+
+    document.getElementById("weaponType").textContent = `${weaponInfo.manufacturer.toUpperCase()} ${weaponInfo.type.toUpperCase()}`;
+    document.getElementById("weaponLevel").textContent = `Level ${weaponInfo.level}`;
+    document.getElementById("weaponRarity").textContent = "LEGENDARY";
+
+    document.getElementById("statMfr").textContent = weaponInfo.manufacturer;
+    document.getElementById("statElement").textContent = weaponInfo.element;
+    document.getElementById("statParts").textContent = allPartsCount;
+    document.getElementById("statPerks").textContent = perks.length;
+
+    const modsSection = document.getElementById("modsSection");
+    const modsList = document.getElementById("modsList");
+    if (upgrades.length > 0) {
+      modsList.innerHTML = upgrades.map(u => `<div class="mod-item">${u}</div>`).join("");
+      modsSection.style.display = "block";
+    } else {
+      modsSection.style.display = "none";
+    }
+
+    const licensedSection = document.getElementById("licensedSection");
+    const licensedList = document.getElementById("licensedList");
+    if (licensed.length > 0) {
+      licensedList.innerHTML = licensed.map(l => `<div class="mod-item">${l}</div>`).join("");
+      licensedSection.style.display = "block";
+    } else {
+      licensedSection.style.display = "none";
+    }
+
+    const perksSection = document.getElementById("perksSection");
+    const perksList = document.getElementById("perksList");
+    if (perks.length > 0) {
+      const uniquePerks = [...new Set(perks)];
+      perksList.innerHTML = uniquePerks.map(p => `<div class="mod-item">${p}</div>`).join("");
+      perksSection.style.display = "block";
+    } else {
+      perksSection.style.display = "none";
+    }
+
+    const prismsSection = document.getElementById("prismsSection");
+    const prismsList = document.getElementById("prismsList");
+    if (prisms.length > 0) {
+      prismsList.innerHTML = prisms.map(p => `<div class="mod-item">${p}</div>`).join("");
+      prismsSection.style.display = "block";
+    } else {
+      prismsSection.style.display = "none";
+    }
+
+    weaponDetails.style.display = "block";
+    msg.className = "message success show";
+    msg.textContent = "✓ Weapon Generated Successfully";
+
+  } catch (err) {
+    console.error(err);
+    msg.className = "message error show";
+    msg.textContent = "Error: " + err.message;
+    out.textContent = "Failed";
+    weaponDetails.style.display = "none";
+  }
+}
+
+async function executeBuilderRoll() {
+  const out = document.getElementById("outputSerial");
+  const msg = document.getElementById("message");
+  const weaponDetails = document.getElementById("weaponDetails");
+
+  out.textContent = "Processing...";
+  out.classList.add("empty");
+  msg.style.display = 'none';
+  weaponDetails.style.display = 'none';
+  
+  // Reset to serial tab
+  document.querySelectorAll(".serial-tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.tab === "serial");
+  });
+
+  try {
+    // Use the base weapon from builder state (already deserialized)
+    const { deserialized: finalStr, upgrades, prisms, perks, licensed } = applyBuilderLogic(builderState.baseDeserialized);
+
+    const weaponInfo = parseWeaponInfo(finalStr);
+    const partsData = extractParts(finalStr);
+    const allPartsCount = (partsData.rarity ? 1 : 0) + partsData.parts.length + (partsData.element ? 1 : 0);
+
+    const finalSerial = await serializeDeserialized(finalStr);
+
+    currentSerial = finalSerial;
+    currentDeserialized = finalStr;
+
+    out.textContent = finalSerial;
+    out.classList.remove("empty");
+
+    document.getElementById("weaponType").textContent = `${weaponInfo.manufacturer.toUpperCase()} ${weaponInfo.type.toUpperCase()}`;
+    document.getElementById("weaponLevel").textContent = `Level ${weaponInfo.level}`;
+    document.getElementById("weaponRarity").textContent = "LEGENDARY";
+
+    document.getElementById("statMfr").textContent = weaponInfo.manufacturer;
+    document.getElementById("statElement").textContent = weaponInfo.element;
+    document.getElementById("statParts").textContent = allPartsCount;
+    document.getElementById("statPerks").textContent = perks.length;
+
+    const modsSection = document.getElementById("modsSection");
+    const modsList = document.getElementById("modsList");
+    if (upgrades.length > 0) {
+      modsList.innerHTML = upgrades.map(u => `<div class="mod-item">${u}</div>`).join("");
+      modsSection.style.display = "block";
+    } else {
+      modsSection.style.display = "none";
+    }
+
+    const licensedSection = document.getElementById("licensedSection");
+    const licensedList = document.getElementById("licensedList");
+    if (licensed.length > 0) {
+      licensedList.innerHTML = licensed.map(l => `<div class="mod-item">${l}</div>`).join("");
+      licensedSection.style.display = "block";
+    } else {
+      licensedSection.style.display = "none";
+    }
+
+    const perksSection = document.getElementById("perksSection");
+    const perksList = document.getElementById("perksList");
+    if (perks.length > 0) {
+      const uniquePerks = [...new Set(perks)];
+      perksList.innerHTML = uniquePerks.map(p => `<div class="mod-item">${p}</div>`).join("");
+      perksSection.style.display = "block";
+    } else {
+      perksSection.style.display = "none";
+    }
+
+    const prismsSection = document.getElementById("prismsSection");
+    const prismsList = document.getElementById("prismsList");
+    if (prisms.length > 0) {
+      prismsList.innerHTML = prisms.map(p => `<div class="mod-item">${p}</div>`).join("");
+      prismsSection.style.display = "block";
+    } else {
+      prismsSection.style.display = "none";
+    }
+
+    weaponDetails.style.display = "block";
+    msg.className = "message success show";
+    msg.textContent = "✓ Weapon Built Successfully";
+
+  } catch (err) {
+    console.error(err);
+    msg.className = "message error show";
+    msg.textContent = "Error: " + err.message;
+    out.textContent = "Failed";
+    weaponDetails.style.display = "none";
+  }
+}
+
+// --- UI HANDLERS ---
+function handleBuildButton(buttonType) {
+  if (currentMode === "brickedup_builder") {
+    // In Builder mode, all buttons trigger the builder build
+    doBuilderBuild();
+  } else {
+    // In Stock/Paste modes, buttons work normally
+    if (buttonType === "apocalypse") {
+      doApocalypseRoll();
+    } else if (buttonType === "chaos") {
+      doRandomChaosRoll();
+    }
+  }
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+  
+  // CLEAR WEAPON SELECTIONS when switching modes
+  document.getElementById("weaponSourceStock").value = "";
+  document.getElementById("weaponSourcePaste").value = "";
+  
+  // Clear all part selections
+  document.querySelectorAll('#licensedPartsGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('#prismsGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('#perksGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.element-btn').forEach(btn => btn.classList.remove('active'));
+  selectedElement = null;
+  
+  // Collapse paste section
+  document.getElementById("pasteSection").classList.add("collapsed");
+  document.getElementById("pasteSection").classList.remove("expanded");
+  document.getElementById("pasteToggleIcon").textContent = "▼";
+  
+  // Clear synergy card selections
+  document.querySelectorAll('.synergy-card').forEach(c => c.classList.remove('active'));
+  
+  // Show/hide Builder-specific UI elements
+  const isBuilder = mode === "brickedup_builder";
+  document.getElementById("builderTooltip").style.display = isBuilder ? "inline-flex" : "none";
+  document.getElementById("synergiesSection").style.display = isBuilder ? "block" : "none"; // Show synergies in Builder
+  
+  // Collapse synergy grid by default when switching to Builder
+  if (isBuilder) {
+    document.getElementById("synergyGrid").style.display = "none";
+    document.getElementById("synergiesToggleIcon").textContent = "▼ Click to expand";
+  }
+  
+  // Show/hide appropriate buttons based on mode
+  document.getElementById("rollBtn").style.display = isBuilder ? "none" : "block";
+  document.getElementById("chaosBtn").style.display = isBuilder ? "none" : "block";
+  document.getElementById("builderBtn").style.display = isBuilder ? "block" : "none";
+  
+  // Reset builder state if switching to builder mode
+  if (isBuilder) {
+    builderState.baseWeapon = null;
+    builderState.baseSerial = null;
+    builderState.baseDeserialized = null;
+    builderState.baseType = null;
+  }
+}
+
+function toggleElement(el) {
+  const btn = document.querySelector(`.element-btn[data-element="${el}"]`);
+  if (selectedElement === el) {
+    selectedElement = null;
+    btn.classList.remove("active");
+  } else {
+    document.querySelectorAll(".element-btn").forEach(b => b.classList.remove("active"));
+    selectedElement = el;
+    btn.classList.add("active");
+  }
+}
+
+function toggleSection(section) {
+  const sectionEl = document.getElementById(section + 'Section');
+  const iconEl = document.getElementById(section + 'ToggleIcon');
+  
+  if (sectionEl.classList.contains('collapsed')) {
+    sectionEl.classList.remove('collapsed');
+    sectionEl.classList.add('expanded');
+    iconEl.textContent = '▲';
+  } else {
+    sectionEl.classList.add('collapsed');
+    sectionEl.classList.remove('expanded');
+    iconEl.textContent = '▼';
+  }
+}
+
+function clearPaste() {
+  document.getElementById("weaponSourcePaste").value = "";
+}
+
+function clearStock() {
+  document.getElementById("weaponSourceStock").value = "";
+}
+
+function showBaseWeaponToast(text) {
+  const toast = document.getElementById("baseWeaponToast");
+  toast.innerHTML = `✓ ${text}`;
+  toast.classList.add("show");
+  
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
+
+function showBuilderInfo() {
+  document.getElementById("builderInfoModal").classList.add("show");
+}
+
+function hideBuilderInfo() {
+  document.getElementById("builderInfoModal").classList.remove("show");
+}
+
+function toggleSynergies() {
+  const grid = document.getElementById("synergyGrid");
+  const icon = document.getElementById("synergiesToggleIcon");
+  
+  if (grid.style.display === "none") {
+    grid.style.display = "block";
+    icon.textContent = "▲ Click to collapse";
+  } else {
+    grid.style.display = "none";
+    icon.textContent = "▼ Click to expand";
+  }
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000); // Changed from 3000ms to 2000ms
+}
+
+function detectAndCheckEquippedParts(deserialized) {
+  // Clear all current selections first
+  document.querySelectorAll('#licensedPartsGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('#prismsGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('#perksGrid input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.element-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // Parse the deserialized string to find all parts
+  const partsMatch = deserialized.match(/\{[^}]+\}/g) || [];
+  
+  // Check Elements
+  if (partsMatch.includes('{1:12}')) {
+    selectedElement = 'fire';
+    document.querySelector('.element-btn[data-element="fire"]').classList.add('active');
+  } else if (partsMatch.includes('{1:11}')) {
+    selectedElement = 'cryo';
+    document.querySelector('.element-btn[data-element="cryo"]').classList.add('active');
+  } else if (partsMatch.includes('{1:10}')) {
+    selectedElement = 'corrosive';
+    document.querySelector('.element-btn[data-element="corrosive"]').classList.add('active');
+  } else if (partsMatch.includes('{1:14}')) {
+    selectedElement = 'shock';
+    document.querySelector('.element-btn[data-element="shock"]').classList.add('active');
+  } else if (partsMatch.includes('{1:13}')) {
+    selectedElement = 'radiation';
+    document.querySelector('.element-btn[data-element="radiation"]').classList.add('active');
+  } else {
+    selectedElement = null;
+  }
+  
+  // Check Licensed Parts
+  LICENSED_PARTS_MAP.forEach((partInfo, code) => {
+    if (partsMatch.includes(code)) {
+      const cb = document.querySelector(`#licensedPartsGrid input[data-licensed="${partInfo.manufacturer}"][value="${partInfo.type}"]`);
+      if (cb) cb.checked = true;
+    }
+  });
+  
+  // Check Prisms
+  PRISM_POOL.forEach((prism, idx) => {
+    if (partsMatch.includes(prism.code)) {
+      const cb = document.querySelector(`#prismsGrid input[data-prism="${idx}"]`);
+      if (cb) cb.checked = true;
+    }
+  });
+  
+  // Check Legendary Perks
+  LEGENDARY_PERKS.forEach((perk, idx) => {
+    if (partsMatch.includes(perk.code)) {
+      const cb = document.querySelector(`#perksGrid input[data-perk="${idx}"]`);
+      if (cb) cb.checked = true;
+    }
+  });
+}
+
+function switchGuideTab(tabName) {
+  // Remove active class from all tabs and content
+  document.querySelectorAll('.guide-tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.guide-content').forEach(content => content.classList.remove('active'));
+  
+  // Add active class to selected tab and content
+  event.target.classList.add('active');
+  document.getElementById('guide-' + tabName).classList.add('active');
+}
+
+function toggleGuideSection() {
+  const guideSection = document.getElementById('guidesSection');
+  if (guideSection.style.display === 'none') {
+    guideSection.style.display = 'block';
+  } else {
+    guideSection.style.display = 'none';
+  }
+}
+
+// --- BUILDER MODE FUNCTIONS ---
+async function handleWeaponSourceChange() {
+  const stockSel = document.getElementById("weaponSourceStock").value;
+  const pasteSel = document.getElementById("weaponSourcePaste").value.trim();
+  
+  // Determine which source to use (paste takes priority if both somehow exist)
+  let sourceSerial = "";
+  let sourceType = "";
+  
+  if (pasteSel) {
+    sourceSerial = pasteSel;
+    sourceType = "paste";
+  } else if (stockSel) {
+    const [t, m] = stockSel.split("|");
+    sourceSerial = baseItems[t][m];
+    sourceType = "stock";
+  } else {
+    // Nothing selected, clear builder state if in builder mode
+    if (currentMode === "brickedup_builder") {
+      builderState.baseWeapon = null;
+      builderState.baseSerial = null;
+      builderState.baseDeserialized = null;
+      builderState.baseType = null;
+    }
+    return;
+  }
+  
+  try {
+    // Deserialize the weapon
+    const res = await deserializeSerialHelper(sourceSerial);
+    if (!res || !res.deserialized) {
+      throw new Error("Invalid weapon serial");
+    }
+    
+    const weaponInfo = parseWeaponInfo(res.deserialized);
+    
+    // Auto-detect and check equipped parts FOR BOTH MODES
+    detectAndCheckEquippedParts(res.deserialized);
+    
+    // Show toast notification FOR BOTH MODES
+    showToast(`Loaded: ${weaponInfo.manufacturer.toUpperCase()} ${weaponInfo.type.toUpperCase()} LVL ${weaponInfo.level}`);
+    
+    // If in Builder mode, also update builder state and show floating base weapon toast
+    if (currentMode === "brickedup_builder") {
+      builderState.baseType = sourceType;
+      builderState.baseSerial = sourceSerial;
+      builderState.baseDeserialized = res.deserialized;
+      builderState.baseWeapon = weaponInfo;
+      
+      // Show floating base weapon toast (cleaner than status box)
+      showBaseWeaponToast(`${weaponInfo.manufacturer.charAt(0).toUpperCase() + weaponInfo.manufacturer.slice(1)} ${weaponInfo.type} (Level ${weaponInfo.level})`);
+    }
+    
+  } catch (err) {
+    console.error(err);
+    showToast("Error: " + err.message);
+  }
+}
+
+
+// Init complete
+</script>
+</body>
+</html>
